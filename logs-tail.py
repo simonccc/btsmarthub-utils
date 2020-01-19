@@ -37,6 +37,12 @@ cookies = {
 def login():
   login = requests.post(cfg.hub['url'] + '/login.cgi', cookies=cookies, data=login_body, allow_redirects=False)
 
+def print_c(color, string):
+  if cfg.tail_colors['enabled'] == 'true':
+   return(cfg.tail_colors[color] + string  + '\x1b[0m ')
+  else:
+   return(string)
+
 def timestamp_short(timestamp):
   return(datetime.datetime.fromtimestamp(int(timestamp)).strftime('%H:%M:%S'))
 
@@ -46,7 +52,7 @@ def signal_handler(signal, frame):
 # get the current ts - 10 seconds
 ts = int(time.time()) - 10
 short_start_time = timestamp_short(ts)
-print('starting at: ' + str(short_start_time))
+print(print_c('green', ('starting at: ' + str(short_start_time))))
 
 # Ctrl+C handler
 signal.signal(signal.SIGINT, signal_handler)
@@ -75,9 +81,6 @@ while True:
   else:
     content = r.content
     vars = content.decode().split(";")
-
-    #fw_update_time = urllib.parse.unquote((vars[6].split("="))[1])
-    #print('fw_update_time', fw_update_time)
 
     # split the event log var 
     events = (vars[34].split(","))
@@ -129,9 +132,13 @@ while True:
 
         # map event data
         event_data = str(((parsed_events[i])[1]))
+        prog_data = event_data.split()
+        prog = prog_data[0]
+        prog_data.remove(prog)
+        prog_event = ' '.join(prog_data)
 
         # print log entry
-        print(sts + " " + event_data)
+        print((print_c('blue',sts) + " " + print_c('yellow',prog) + " " + prog_event))
 
         # set ts to the latest log tss
         ts = event_timestamp
