@@ -27,7 +27,7 @@ passw=md5.hexdigest()
 login_body = ('O=helpdesk.htm&usr=admin&pws=' + passw)
 
 # max amount of events to check
-max_event_count=5
+max_event_count=50
 
 cookies = {
 'logout': 'not',
@@ -93,6 +93,7 @@ while True:
 
         # remove extra characters
         event = url_decoded.replace("['","").replace("']","").strip('\n')
+
         # split the event by time and event
         event_split = event.split(". ")
 
@@ -129,15 +130,13 @@ while True:
         # map event data
         event_data = str(((parsed_events[i])[1]))
 
-        # map short timestamp for display
-        sts = timestamp_short(event_timestamp)
-
         # print log entry
         print(sts + " " + event_data)
 
         # set ts to the latest log tss
         ts = event_timestamp
 
+    # assume we have processed all the events for this second and increment it
     if ( str(ts) == str(event_timestamp)):
         ts = (int(ts) + 1 )
 
