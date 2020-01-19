@@ -35,6 +35,7 @@ cookies = {
 }
 
 def login():
+  print(print_c('red', 'logging in...'))
   login = requests.post(cfg.hub['url'] + '/login.cgi', cookies=cookies, data=login_body, allow_redirects=False)
 
 def print_c(color, string):
