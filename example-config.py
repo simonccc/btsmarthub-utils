@@ -1,5 +1,9 @@
 hub = {'pass': 'password',
-        'url': 'http://yoursmarthub'}
+       'url': 'http://smarthub',
+       'name': 'smarthub'
+       }
+logger = {'host': 'loghost',
+          'port': 514}
 tail_colors = {
         'enabled': 'true',
         'red': '\x1b[1;33;91m',
