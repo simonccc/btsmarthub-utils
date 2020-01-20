@@ -2,4 +2,6 @@
 
 Utilities for working with the BT Smarthub 2
 
-so far only a logs tailer
+* logs-tail.py - tails the log to stdout with colors ( you can disable them ) 
+
+* logs-syslog.py - send's the logs to a remote syslog server ( only tested with logstash ) 
