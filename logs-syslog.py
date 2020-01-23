@@ -16,15 +16,11 @@ import config as cfg
 import logging
 import logging.handlers
 
+# setup sysloging
 my_logger = logging.getLogger('smarthub')
 my_logger.setLevel(logging.DEBUG)
 handler = logging.handlers.SysLogHandler(address = (cfg.logger['host'],cfg.logger['port']))
 my_logger.addHandler(handler)
-
-# generate a uniqe token for this host
-md5 = hashlib.md5()
-md5.update(str(socket.gethostname()).encode('utf-8'))
-urn = md5.hexdigest()
 
 # generate the hash of password used to login
 md5 = hashlib.md5()
@@ -37,13 +33,8 @@ login_body = ('O=helpdesk.htm&usr=admin&pws=' + passw)
 # max amount of events to check
 max_event_count=50
 
-cookies = {
-'logout': 'not',
-'urn': urn
-}
-
 def login():
-  login = requests.post(cfg.hub['url'] + '/login.cgi', cookies=cookies, data=login_body, allow_redirects=False)
+  login = requests.post(cfg.hub['url'] + '/login.cgi', cookies=cfg.cookies, data=login_body, allow_redirects=False)
 
 def timestamp_short(timestamp):
   return(datetime.datetime.fromtimestamp(int(timestamp)).strftime("%Y-%m-%dT%H:%M:%S"))
@@ -72,7 +63,7 @@ while True:
   parsed_events = {}
 
   # request status page with latest time stamp
-  r = requests.get(cfg.hub['url'] + '/cgi/cgi_helpdesk.js?t=' + str(ts), cookies=cookies, allow_redirects=False)
+  r = requests.get(cfg.hub['url'] + '/cgi/cgi_helpdesk.js?t=' + str(ts), cookies=cfg.cookies, allow_redirects=False)
 
   # if a 302 login
   if (str(r.status_code) == '302'):
@@ -83,7 +74,7 @@ while True:
     content = r.content
     vars = content.decode().split(";")
 
-    # split the event log var 
+    # split the event log var
     events = (vars[34].split(","))
 
     for event in events:
@@ -101,7 +92,7 @@ while True:
         # split the event by time and event
         event_split = event.split(". ")
 
-        # add the in year ( fix me ) 
+        # add the in year ( fix me )
         log_time = (event_split[0] + ' 2020')
         log_event = (event_split[1])
 
@@ -149,4 +140,4 @@ while True:
         ts = (int(ts) + 1 )
 
   # sleep
-  time.sleep(5)
+  time.sleep(30)

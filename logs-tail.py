@@ -13,11 +13,6 @@ import math
 # local config
 import config as cfg
 
-# generate a uniqe token for this host
-md5 = hashlib.md5()
-md5.update(str(socket.gethostname()).encode('utf-8'))
-urn = md5.hexdigest()
-
 # generate the hash of password used to login
 md5 = hashlib.md5()
 md5.update(cfg.hub['pass'].encode())
@@ -29,14 +24,9 @@ login_body = ('O=helpdesk.htm&usr=admin&pws=' + passw)
 # max amount of events to check
 max_event_count=50
 
-cookies = {
-'logout': 'not',
-'urn': urn
-}
-
 def login():
   print(print_c('red', 'logging in...'))
-  login = requests.post(cfg.hub['url'] + '/login.cgi', cookies=cookies, data=login_body, allow_redirects=False)
+  login = requests.post(cfg.hub['url'] + '/login.cgi', cookies=cfg.cookies, data=login_body, allow_redirects=False)
 
 def print_c(color, string):
   if cfg.tail_colors['enabled'] == 'true':
@@ -53,7 +43,7 @@ def signal_handler(signal, frame):
 # get the current ts - 10 seconds
 ts = int(time.time()) - 10
 short_start_time = timestamp_short(ts)
-print(print_c('green', ('starting at: ' + str(short_start_time))))
+print(print_c('green', (str(short_start_time)) + " starting smarthub tail..."))
 
 # Ctrl+C handler
 signal.signal(signal.SIGINT, signal_handler)
@@ -72,7 +62,7 @@ while True:
   parsed_events = {}
 
   # request status page with latest time stamp
-  r = requests.get(cfg.hub['url'] + '/cgi/cgi_helpdesk.js?t=' + str(ts), cookies=cookies, allow_redirects=False)
+  r = requests.get(cfg.hub['url'] + '/cgi/cgi_helpdesk.js?t=' + str(ts), cookies=cfg.cookies, allow_redirects=False)
 
   # if a 302 login
   if (str(r.status_code) == '302'):
@@ -124,10 +114,6 @@ while True:
       event_timestamp = (parsed_events[i])[0]
       sts = timestamp_short(event_timestamp)
 
-#      print ('i:' + i + ' ts: ' + str(ts) + ' event timestamp: ' + str(event_timestamp))
-#      print('eventdata: ' + event_data)
-#      print('log eventdata: ' + str(((parsed_events[i])[1])))
-
       # if event timestamp is greater than the current 
       if ( ( str(event_timestamp) >= str(ts) ) and ( str((parsed_events[i])[1]) != str(event_data) )):
 
@@ -139,7 +125,7 @@ while True:
         prog_event = ' '.join(prog_data)
 
         # print log entry
-        print((print_c('blue',sts) + " " + print_c('yellow',prog) + " " + prog_event))
+        print((print_c('blue',sts) + print_c('yellow',prog) + prog_event))
 
         # set ts to the latest log tss
         ts = event_timestamp
@@ -149,4 +135,4 @@ while True:
         ts = (int(ts) + 1 )
 
   # sleep
-  time.sleep(5)
+  time.sleep(10)
