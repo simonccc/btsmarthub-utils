@@ -22,13 +22,8 @@ my_logger.setLevel(logging.DEBUG)
 handler = logging.handlers.SysLogHandler(address = (cfg.logger['host'],cfg.logger['port']))
 my_logger.addHandler(handler)
 
-# generate the hash of password used to login
-md5 = hashlib.md5()
-md5.update(cfg.hub['pass'].encode())
-passw=md5.hexdigest()
-
 # body of login request
-login_body = ('O=helpdesk.htm&usr=admin&pws=' + passw)
+login_body = ('O=helpdesk.htm&usr=admin&pws=' + hashlib.md5(cfg.hub['pass'].encode('utf-8')).hexdigest())
 
 # max amount of events to check
 max_event_count=50
