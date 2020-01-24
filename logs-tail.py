@@ -1,10 +1,8 @@
 #!/usr/bin/env python3 
 
 import requests
-import random
 import time
 import datetime
-import socket
 import urllib.parse
 import hashlib
 import signal
