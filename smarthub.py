@@ -9,22 +9,54 @@ import sys
 import logging
 import logging.handlers
 
-DOCKER_URL=os.environ['URL']
-DOCKER_PASS=os.environ['PASS']
-DOCKER_LOGHOST=os.environ['LOGHOST']
-DOCKER_LOGHOST_PORT=os.environ['LOGHOST_PORT']
-DOCKER_SMARTHUB_NAME=os.environ['SMARTHUB_NAME']
+DOCKER_URL = None
+DOCKER_PASS = None
+DOCKER_LOGHOST = None
+DOCKER_LOGHOST_PORT = None
+DOCKER_SMARTHUB_NAME = None
 
+# login details
+try:
+  DOCKER_URL=os.environ['URL']
+  DOCKER_PASS=os.environ['PASS']
+except:
+  print('NO URL OR PASS DEFINED',file=sys.stderr)
+  sys.exit(1)
+
+# syslog
+try:
+  DOCKER_LOGHOST=os.environ['LOGHOST']
+  DOCKER_LOGHOST_PORT=os.environ['LOGHOST_PORT']
+  DOCKER_SMARTHUB_NAME=os.environ['SMARTHUB_NAME']
+except:
+  pass
+
+# used in default messages so needs to be set 
+if DOCKER_SMARTHUB_NAME is None:
+  DOCKER_SMARTHUB_NAME = 'smarthub'
+
+# cookies used for logging in
 cookies = {
 'logout': 'not',
 'urn': 'kXX2kkkklk11x'
 }
 
-# setup sysloging
-my_logger = logging.getLogger('smarthub')
-my_logger.setLevel(logging.DEBUG)
-handler = logging.handlers.SysLogHandler(address = (DOCKER_LOGHOST,int(DOCKER_LOGHOST_PORT)))
-my_logger.addHandler(handler)
+# activate syslog
+if DOCKER_LOGHOST is not None:
+
+  # use default syslog port if not passed
+  if DOCKER_LOGHOST_PORT is None:
+    DOCKER_LOGHOST_PORT = '512'
+
+  print('SYSLOGGING AS: ' + DOCKER_SMARTHUB_NAME + " TO: " +  DOCKER_LOGHOST + ':' + DOCKER_LOGHOST_PORT, file=sys.stderr)
+
+  my_logger = logging.getLogger('smarthub')
+  my_logger.setLevel(logging.DEBUG)
+  handler = logging.handlers.SysLogHandler(address = (DOCKER_LOGHOST,int(DOCKER_LOGHOST_PORT)))
+  my_logger.addHandler(handler)
+
+else:
+  print('NO SYSLOG ACTIVATED',file=sys.stderr)
 
 # body of login request
 login_body = ('O=helpdesk.htm&usr=admin&pws=' + hashlib.md5(DOCKER_PASS.encode('utf-8')).hexdigest())
@@ -108,7 +140,7 @@ while True:
       event_timestamp = (parsed_events[i])[0]
       sts = timestamp_short(event_timestamp)
 
-      # if event timestamp is greater than the current 
+      # if event timestamp is greater than the current
       if ( ( str(event_timestamp) >= str(ts) ) and ( str((parsed_events[i])[1]) != str(event_data) )):
 
         # map event data
@@ -120,10 +152,10 @@ while True:
 
         # syslog event
         syslog_event = (str(sts) + '.00000 ' + DOCKER_SMARTHUB_NAME + ' ' +  str(prog) + ': ' +  str(prog_event))
-        print(syslog_event,file=sys.stderr)
+        print('LOG: ' + syslog_event,file=sys.stderr)
 
-        # print log entry
-        my_logger.info(syslog_event)
+        if DOCKER_LOGHOST is not None:
+          my_logger.info(syslog_event)
 
         # set ts to the latest log tss
         ts = event_timestamp
