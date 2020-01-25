@@ -1,5 +1,6 @@
 hub = {'pass': 'password',
-        'url': 'http://yoursmarthub'}
+        'url': 'http://yoursmarthub',
+        'name': 'smarthub'}
 tail_colors = {
         'enabled': 'true',
         'red': '\x1b[1;33;91m',
