@@ -1,80 +1,53 @@
 #!/usr/bin/env python3 
 
 import requests
-import time
-import datetime
 import socket
 import urllib.parse
-import hashlib
 import sys
-import math
 import re
 # local config
 import config as cfg
 
 # request page
-r = requests.get('http://192.168.0.1/cgi/cgi_basicMyDevice.js')
+vars = (requests.get(cfg.hub['url'] + '/cgi/cgi_basicMyDevice.js').content.decode()).split('var')
 
-def print_c(color, string):
-  if cfg.tail_colors['enabled'] == 'true':
-   return(cfg.tail_colors[color] + string  + '\x1b[0m ')
-  else:
-   return(string)
+known_device_list = vars[1].split('\n')
+rate = vars[2].split('\n')
 
-content = r.content
-vars = content.decode().split("\n")
+# store mac to ip mappings
+mac_to_ip = {}
 
-for var in vars:
-#    print(var)
-    var_types = var.split(",")
+# get device list
+for device in known_device_list:
 
-    # fix for the first mac address
-    if (re.search('var known_device_list', var_types[0])):
-       var_types[0] = var_types[0].replace('var known_device_list=[', '')
-    var_types[0] = var_types[0].replace('{', '')
-    var_types[0] = var_types[0].replace('\'', '')
+    device = urllib.parse.unquote(device.replace('\'', ''))
+    device_items = device.split(',')
+    mac = device_items[0]
 
+    # fix for the first mac address
+    if (re.search('known_device_list', mac)):
+       mac = mac.replace('known_device_list=[', '')
+
+    mac_f = mac.split('{mac:')
     try:
-      mac = urllib.parse.unquote(var_types[0].split(":")[1])
+      mac_addr = mac_f[1]
     except:
-     continue 
+      continue
 
-    try:
-      macf = urllib.parse.unquote(var_types[0].split(":")[0])
-      if (re.search('mac', macf)):
-        pass
-      else:
+    ip = device_items[2]
+    ip_addr = ip.split('ip:')
+    mac_to_ip[mac_addr] = ip_addr[1]
+
+for rate in rate:
+  rate = urllib.parse.unquote(rate.replace('\'', ''))
+  rate_items = rate.split(',')
+  if ( re.search('timestamp', rate_items[0])):
+      rate_mac = (rate_items[2].replace('mac:', '')).upper()
+      tx = (rate_items[3].replace('tx:', ''))
+      rx = (rate_items[4].replace('rx:', ''))
+      rx = rx.replace('}','')
+      try:
+        if (mac_to_ip[rate_mac]):
+          print(rate_mac, mac_to_ip[rate_mac], tx, rx)
+      except:
         continue
-    except:
-     pass 
-
-    try: 
-      hostname = urllib.parse.unquote(var_types[1].split(":")[1]).replace('\'', '')
-    except:
-     continue
-    try:
-      name = urllib.parse.unquote(var_types[4].split(":")[1]).replace('\'', '')
-    except:
-      continue
-    try: 
-      os = urllib.parse.unquote(var_types[6].split(":")[1]).replace('\'', '')
-    except:
-      continue
-    device = urllib.parse.unquote(var_types[7].split(":")[1]).replace('\'', '')
-    if (hostname == '' ):
-        hostname = name
-    if (re.search('unknown_', hostname)):
-        hostname = os
-    if (re.search('Unknown', hostname)):
-        hostname = device
-    ip = urllib.parse.unquote(var_types[2].split(":")[1]).replace('\'', '')
-    activity = urllib.parse.unquote(var_types[5].split(":")[1])
-
-    if (activity == '\'0\'' ):
-       continue
-    os = urllib.parse.unquote(var_types[6].split(":")[1])
-    active = urllib.parse.unquote(var_types[9].split(":")[1]).replace('\'', '')
-    port = urllib.parse.unquote(var_types[11].split(":")[1]).replace('\'', '')
-
-    print(print_c('blue', mac),ip, print_c('yellow',hostname),print_c('green',port),active)
-
