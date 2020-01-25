@@ -13,3 +13,5 @@ cookies = {
 }
 logger = {'host': 'syslog-server',
           'port': 514}
+graphite = {'g_host': 'graphite-server',
+            'prefix': 'smarthub'}

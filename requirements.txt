@@ -1,1 +1,2 @@
 requests>=2.22.0
+graphyte==1.6.0
