@@ -33,3 +33,5 @@ copy `example-config.py` to `config.py` and edit it
 * mac-ip-bw.py - displays the macs and current map'd IP's and raw bw stats
 
 * bwmon.py - sends bandwidth info per mac addr to graphite
+
+* info.py - prints various things from the router status page
