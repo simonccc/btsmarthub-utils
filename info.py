@@ -1,13 +1,9 @@
 #!/usr/bin/env python3 
 
 import requests
-import time
-import datetime
-import socket
 import urllib.parse
 import hashlib
 import sys
-import math
 # local config
 import config as cfg
 
@@ -24,11 +20,10 @@ def print_c(color, string):
   else:
    return(string)
 
-
 # request status page 
 r = requests.get(cfg.hub['url'] + '/cgi/cgi_helpdesk.js', cookies=cfg.cookies, allow_redirects=False)
 
-  # if a 302 login
+# if a 302 login
 if (str(r.status_code) == '302'):
   login()
   r = requests.get(cfg.hub['url'] + '/cgi/cgi_helpdesk.js', cookies=cfg.cookies, allow_redirects=False)

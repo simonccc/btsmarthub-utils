@@ -1,7 +1,6 @@
 #!/usr/bin/env python3 
 
 import requests
-import socket
 import urllib.parse
 import sys
 import re
