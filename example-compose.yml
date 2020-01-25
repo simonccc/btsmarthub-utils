@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+    smarthub:
+      image: smarthub
+      container_name: smarthub
+      restart: unless-stopped
+      hostname: smarthub
+      environment:
+        - URL=http://smarthub
+        - SMARTHUB_NAME=smarthub
+        - PASS=password
+        - LOGHOST=loghost
+        - LOGHOST_PORT=514

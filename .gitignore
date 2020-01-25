@@ -1,4 +1,4 @@
 config.py
 config.py.*
 *.pyc
-DockerFile
+docker-compose.yml

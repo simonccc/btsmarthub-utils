@@ -3,9 +3,3 @@ RUN apk add python3
 RUN pip3 install requests
 COPY smarthub.py /
 ENTRYPOINT [ "python3", "-u", "./smarthub.py" ]
-
-ENV URL http://smarthuburl
-ENV SMARTHUB_NAME smarthub
-ENV PASS password
-ENV LOGHOST loghost
-ENV LOGHOST_PORT 514
