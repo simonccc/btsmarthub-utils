@@ -23,7 +23,7 @@ cookies = {
 # setup sysloging
 my_logger = logging.getLogger('smarthub')
 my_logger.setLevel(logging.DEBUG)
-handler = logging.handlers.SysLogHandler(address = (DOCKER_LOGHOST,DOCKER_LOGHOST_PORT))
+handler = logging.handlers.SysLogHandler(address = (DOCKER_LOGHOST,int(DOCKER_LOGHOST_PORT)))
 my_logger.addHandler(handler)
 
 # body of login request
@@ -123,7 +123,7 @@ while True:
         print(syslog_event,file=sys.stderr)
 
         # print log entry
-#        my_logger.info(syslog_event)
+        my_logger.info(syslog_event)
 
         # set ts to the latest log tss
         ts = event_timestamp
@@ -133,4 +133,4 @@ while True:
         ts = (int(ts) + 1 )
 
   # sleep
-  time.sleep(30)
+  time.sleep(10)
