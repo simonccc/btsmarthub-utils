@@ -11,9 +11,13 @@ python3
 copy `example-config.py` to `config.py` and edit it
 
 'hub' are the smarthub details
+
 'logger' are the syslog server details
+
 'colors' to change or disable colors
-'cookies' is used for logging in to the router - change 'urn' if you want
+
+'cookies' is used for logging in to the router; urn is just a random thing - can be changed if required
+
 'graphite' graphite server and prefix 
 
 # features
