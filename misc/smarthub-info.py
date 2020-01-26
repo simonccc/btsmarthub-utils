@@ -4,7 +4,7 @@ import requests
 import urllib.parse
 import hashlib
 import sys
-# local config
+sys.path[0:0] = ['../']
 import config as cfg
 
 # body of login request

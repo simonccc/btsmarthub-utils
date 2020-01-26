@@ -3,7 +3,8 @@
 import requests
 import urllib.parse
 import re
-# local config
+import sys
+sys.path[0:0] = ['../']
 import config as cfg
 
 # request page
