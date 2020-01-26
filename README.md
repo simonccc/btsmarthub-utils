@@ -4,7 +4,7 @@
 
 * poll the internet usage for devices connected and send the metrics to graphite 
 
-* docker image to ease deployment
+* docker image to ease deployment 
 
 # manual setup
 
@@ -36,4 +36,23 @@ see misc for other small unfinished things that may be useful
 
 # docker 
 
-See the docker file and scripts and examples to build a docker image to run the syslog and graphite script
+example docker-compose file
+
+`version: '3'
+
+services:
+    smarthub:
+      image: smarthub
+      container_name: smarthub
+      restart: unless-stopped
+      hostname: smarthub
+      environment:
+        - DEBUG=yes
+        - URL=http://smarthub
+        - SMARTHUB_NAME=smarthub
+        - PASS=password
+        - LOGHOST=loghost
+        - LOGHOST_PORT=514
+        - G_HOST=graphitehost
+        - G_PREFIX=smarthub`
+
