@@ -38,7 +38,8 @@ see misc for other small unfinished things that may be useful
 
 example docker-compose file
 
-`version: '3'
+```yml
+ersion: '3'
 
 services:
     smarthub:
@@ -54,5 +55,5 @@ services:
         - LOGHOST=loghost
         - LOGHOST_PORT=514
         - G_HOST=graphitehost
-        - G_PREFIX=smarthub`
-
+        - G_PREFIX=smarthub
+```
