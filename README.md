@@ -38,7 +38,7 @@ see misc for other small unfinished things that may be useful
 
 `docker pull simonczuzu/btsmarthub-utils`
 
-or
+or build the image locally using the script
 
 example docker-compose file
 
