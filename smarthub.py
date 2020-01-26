@@ -1,26 +1,37 @@
 import requests
 import os
+import re
 import time
 import datetime
 import urllib.parse
 import hashlib
 import sys
 
+import graphyte
+
 import logging
 import logging.handlers
 
+DEBUG = None
 DOCKER_URL = None
 DOCKER_PASS = None
 DOCKER_LOGHOST = None
 DOCKER_LOGHOST_PORT = None
 DOCKER_SMARTHUB_NAME = None
+DOCKER_G_HOST = None
+DOCKER_G_PREFIX = None
+
+try:
+  DEBUG=os.environ['DEBUG']
+except:
+  pass
 
 # login details
 try:
   DOCKER_URL=os.environ['URL']
   DOCKER_PASS=os.environ['PASS']
 except:
-  print('NO URL OR PASS DEFINED',file=sys.stderr)
+  print('NO URL OR PASS DEFINED. EXITING',file=sys.stderr)
   sys.exit(1)
 
 # syslog
@@ -28,6 +39,13 @@ try:
   DOCKER_LOGHOST=os.environ['LOGHOST']
   DOCKER_LOGHOST_PORT=os.environ['LOGHOST_PORT']
   DOCKER_SMARTHUB_NAME=os.environ['SMARTHUB_NAME']
+except:
+  pass
+
+# graphite
+try:
+  DOCKER_G_HOST=os.environ['G_HOST']
+  DOCKER_G_PREFIX=os.environ['G_PREFIX']
 except:
   pass
 
@@ -57,6 +75,15 @@ if DOCKER_LOGHOST is not None:
 
 else:
   print('NO SYSLOG ACTIVATED',file=sys.stderr)
+
+# activate graphite
+if DOCKER_G_HOST is not None:
+  if DOCKER_G_PREFIX is None:
+    DOCKER_G_PREFIX = 'smarthub'
+  print('SENDING BW METRICS TO: ' + DOCKER_G_HOST + ' prefix:' + DOCKER_G_PREFIX,file=sys.stderr)
+  graphyte.init(DOCKER_G_HOST, prefix=DOCKER_G_PREFIX, interval=20)
+else:
+  print('NO GRAPHITEACTIVATED',file=sys.stderr)
 
 # body of login request
 login_body = ('O=helpdesk.htm&usr=admin&pws=' + hashlib.md5(DOCKER_PASS.encode('utf-8')).hexdigest())
@@ -152,7 +179,8 @@ while True:
 
         # syslog event
         syslog_event = (str(sts) + '.00000 ' + DOCKER_SMARTHUB_NAME + ' ' +  str(prog) + ': ' +  str(prog_event))
-        print('LOG: ' + syslog_event,file=sys.stderr)
+        if DEBUG is not None:
+          print('LOG: ' + syslog_event,file=sys.stderr)
 
         if DOCKER_LOGHOST is not None:
           my_logger.info(syslog_event)
@@ -163,6 +191,26 @@ while True:
     # assume we have processed all the events for this second and increment it
     if ( str(ts) == str(event_timestamp)):
         ts = (int(ts) + 1 )
+
+  vars = (requests.get(DOCKER_URL + '/cgi/cgi_basicMyDevice.js').content.decode()).split('var')
+  rate = vars[2].split('\n')
+
+  for rate in rate:
+    rate = urllib.parse.unquote(rate.replace('\'', ''))
+    rate_items = rate.split(',')
+    if ( re.search('timestamp', rate_items[0])):
+       rate_mac = (rate_items[2].replace('mac:', '')).upper()
+       tx = (rate_items[3].replace('tx:', ''))
+       rx = (rate_items[4].replace('rx:', ''))
+       rx = rx.replace('}','')
+
+       if DEBUG is not None:
+         print('METRICS: ',rate_mac + '.' + 'tx',tx)
+         print('METRICS: ',rate_mac + '.' + 'rx',rx)
+
+       if DOCKER_G_HOST is not None:
+         graphyte.send(rate_mac + '.' + 'tx',int(tx))
+         graphyte.send(rate_mac + '.' + 'rx',int(rx))
 
   # sleep
   time.sleep(10)
