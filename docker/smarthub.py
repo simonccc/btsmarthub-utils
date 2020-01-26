@@ -213,4 +213,4 @@ while True:
          graphyte.send(rate_mac + '.' + 'rx',int(rx))
 
   # sleep
-  time.sleep(10)
+  time.sleep(30)
