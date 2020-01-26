@@ -39,7 +39,7 @@ see misc for other small unfinished things that may be useful
 example docker-compose file
 
 ```yml
-ersion: '3'
+version: '3'
 
 services:
     smarthub:
