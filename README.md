@@ -36,6 +36,10 @@ see misc for other small unfinished things that may be useful
 
 # docker 
 
+`docker pull simonczuzu/btsmarthub-utils`
+
+or
+
 example docker-compose file
 
 ```yml
