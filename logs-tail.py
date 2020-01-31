@@ -17,9 +17,11 @@ login_body = ('O=helpdesk.htm&usr=admin&pws=' + hashlib.md5(cfg.hub['pass'].enco
 # max amount of events to check
 max_event_count=50
 
+# login to router
 def login():
-  print(print_c('red', 'logging in...'))
+  print('logging in...')
   login = requests.post(cfg.hub['url'] + '/login.cgi', cookies=cfg.cookies, data=login_body, allow_redirects=False)
+  time.sleep(1)
 
 def print_c(color, string):
   if cfg.tail_colors['enabled'] == 'true':

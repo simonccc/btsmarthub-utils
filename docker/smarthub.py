@@ -12,6 +12,9 @@ import graphyte
 import logging
 import logging.handlers
 
+import random
+import string
+
 DEBUG = None
 DOCKER_URL = None
 DOCKER_PASS = None
@@ -53,10 +56,14 @@ except:
 if DOCKER_SMARTHUB_NAME is None:
   DOCKER_SMARTHUB_NAME = 'smarthub'
 
+urn = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 12)) 
+
+print('URN: ', urn)
+
 # cookies used for logging in
 cookies = {
 'logout': 'not',
-'urn': 'kXX2kkkklk11x'
+'urn': urn
 }
 
 # activate syslog
@@ -91,8 +98,12 @@ login_body = ('O=helpdesk.htm&usr=admin&pws=' + hashlib.md5(DOCKER_PASS.encode('
 # max amount of events to check
 max_event_count=50
 
+# login function
 def login():
+  login_ts = int(time.time())
+  print('LOGGING IN AT: ' + str(login_ts) + " " + login_body, file=sys.stderr)
   login = requests.post(DOCKER_URL + '/login.cgi', cookies=cookies, data=login_body, allow_redirects=False)
+  time.sleep(2)
 
 def timestamp_short(timestamp):
   return(datetime.datetime.fromtimestamp(int(timestamp)).strftime("%Y-%m-%dT%H:%M:%S"))
