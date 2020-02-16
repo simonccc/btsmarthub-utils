@@ -183,13 +183,9 @@ while True:
 
         # map event data
         event_data = str(((parsed_events[i])[1]))
-        prog_data = event_data.split()
-        prog = prog_data[0]
-        prog_data.remove(prog)
-        prog_event = ' '.join(prog_data)
 
         # syslog event
-        syslog_event = (str(sts) + '.00000 ' + DOCKER_SMARTHUB_NAME + ' ' +  str(prog) + ': ' +  str(prog_event))
+        syslog_event = (str(sts) + '.00000 ' + DOCKER_SMARTHUB_NAME + ' ' +  ' syslog: ' + str(event_data))
         if DEBUG is not None:
           print('LOG: ' + syslog_event,file=sys.stderr)
 
