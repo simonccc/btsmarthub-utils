@@ -185,7 +185,7 @@ while True:
         event_data = str(((parsed_events[i])[1]))
 
         # syslog event
-        syslog_event = (str(sts) + '.00000 ' + DOCKER_SMARTHUB_NAME + ' ' +  ' syslog: ' + str(event_data))
+        syslog_event = (str(sts) + '.00000 ' + DOCKER_SMARTHUB_NAME + ' syslog: ' + str(event_data))
         if DEBUG is not None:
           print('LOG: ' + syslog_event,file=sys.stderr)
 
