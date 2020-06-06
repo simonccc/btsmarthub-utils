@@ -23,7 +23,7 @@ def getpi():
 
 login()
 pi = getpi()
-#print(pi)
+print(pi)
 
 delstring = ('CMD=&GO=my_network.htm&SET0='+ '50426637' + '%3Dd%252C' + 'DE%2533A49%2533AAE%2533AA9%2533A3D%2533A5F' + '%253B' + '&pi=' + pi)
 

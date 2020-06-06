@@ -1,0 +1,71 @@
+from nonAuth/globals.js
+
+
+// NOTE:
+// our CFG items use ";" as delimiter, it is not suitable for javascrip
+// we need conver it to "%3B" from CFG_CGI routing if it is string conent
+// also embedded inside CFG field.
+// UI use HTML2str() to conver it to normal conent for present purpose by
+// getCFg() aciton.
+//
+// we also need conver to into "%3B" if want to setCfg().
+// here use str2HTML() to conver to back, but some special operator like
+// ":",".",",","-" can not be convert due to multi-fields CFG item use it
+// as delimiter. ":" for MAC, "." for IP, "-" for range, "," for multi-range
+//
+
+function deleteDev(order, j, device){
+			var dhcpreservedclient;
+			if(device=="0"){	//normal device
+				for (var i = 1; i <= dhcpReserveListNum; i++)
+				{
+					dhcpreservedclient = "dhcpreserve" + i;
+					if (getCfg(dhcpreservedclient).length != 0)
+					{
+						var client = HTML2str(getCfg(dhcpreservedclient)).split(',');
+						if (client[1] ==  devicesList_Iface[order].getMac(j).toUpperCase())
+						{
+							cfgDhcpRsvIpIdx = i;
+							break;
+						}
+					}
+				}
+				setCfg("known_devices_update", "d," + devicesList_Iface[order].getMac(j) + ";");
+				setCfg("dhcpreserve" + cfgDhcpRsvIpIdx, encodeURIComponent(encode64("")));
+
+				sendForm("my_network.htm", "", "");
+				statusChange("statusRefreshing","");
+				setTimeout( function(){statusVanishUp( "statusRefreshing"); CollectInfo(); cfgDhcpRsvIpIdx=0;}, 3000);
+
+
+
+function HTML2str(_str){
+  var s=unescape(_str);
+  /*
+  var re=RegExp('[&][#]([0-9]+)[;]','i');
+  while(re.test(s)){
+    var col=re.exec(s);
+    s=s.replace("&#"+col[1]+";",String.fromCharCode(col[1]) );
+  }
+  */
+  //alert("ok.."+s);
+  return (s);
+}
+
+
+
+function sendForm(cPage, _cmd, _waiting){
+	var sub=0;
+	var temp;
+	var xmlhttp=new XMLHttpRequest();
+	var url ="/apply.cgi";
+	xmlhttp.open("POST", url, true);
+	var params = "CMD="+_cmd+ "&GO="+cPage;
+
+	for (var i=0;i<CA.length;i++){
+		if (CA[i].v!=CA[i].o){
+			temp = setCfg(CA[i].n, CA[i].v)
+			params = params + "&SET" + sub + "=" + String(CA[i].i) + "%3D"+ temp;
+			sub++;
+		}
+	}

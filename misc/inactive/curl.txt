@@ -1,0 +1,16 @@
+curl 'http://192.168.0.1/apply.cgi' \
+-XPOST \
+-H 'Accept: */*' \
+-H 'Content-Type: text/plain;charset=UTF-8' \
+-H 'Origin: http://192.168.0.1' \
+-H 'Cookie: logout=not; urn=6ccfe344e4e3713d' \
+-H 'Content-Length: 107' \
+-H 'Accept-Language: en-gb' \
+-H 'Host: 192.168.0.1' \
+-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Safari/605.1.15' \
+-H 'Referer: http://192.168.0.1/my_network.htm' \
+-H 'Accept-Encoding: gzip, deflate' \
+-H 'Connection: keep-alive' \
+--data-binary 'CMD=&GO=my_network.htm&SET0=53813335%3Dd%252C7C%253AFF%253A48%253A70%253A8D%253A8A%253B&pi=IANp88wHLhou6PA3'
+#--data-binary 'CMD=&GO=my_network.htm&SET0=53813335%3Dd%252C7C%253AFF%253A48%253A70%253A8D%253A8A%253B&pi=IANp88wHLhou6PA3'
+#
