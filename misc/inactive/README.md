@@ -1,5 +1,7 @@
 # Deleting inactive devices
 
+Notes on how this works...
+
 ### /my_network.htm
 The page listing the known network devices; contains a value for pi and some other vars
 
@@ -12,6 +14,7 @@ The page listing the known network devices; contains a value for pi and some oth
 
 <script src="./nonAuth/globals.js"></script>
 ```
+
 ### /nonAuth/globals.js
 
 #### what is pi?
@@ -29,6 +32,7 @@ change_pi_var.request("cgi/renewPi.js", "GET");
 		k="cgi/cgi_"+CGIs[i]+'.js?t='+ Date.now();
 		
 ```
+
 #### URL encoding
 
 ```
@@ -61,7 +65,7 @@ function sendForm(cPage, _cmd, _waiting){
         }
 ```
 
-globals calls the CGI's listed in /my_network.htm eg:
+so globals.js calls the CGI's listed in /my_network.htm eg:
 
 ```
 /cgi/cgi_myNetwork.js?t=1592032536131
@@ -82,22 +86,15 @@ cgi_owl.js doesn't really seem to be required but maybe it has a unique cfg valu
 
 ### /apply.cgi
 
-#### headers
 ```
 Origin: http://ipofsmarthub
-````
+CMD=&GO=my_network.htm&SET0=53813335%3Dd%252C7C%253AFF%253A48%253A70%253A8D%253A8A%253B&pi=IANp88wHLhou6PA3
 
-is passed the value of the cfg item known_devices_update, the "d," from deleteDev, the encoded MAC and the pi parameter eg:
-```
-'CMD=&GO=my_network.htm&SET0=53813335%3Dd%252C7C%253AFF%253A48%253A70%253A8D%253A8A%253B&pi=IANp88wHLhou6PA3'
+CMD=&GO=my_network.htm&SET0= 53813335 %3D d%252C 7C %253A FF %253A 48 %253A 70 %253A 8D %253A 8A %253B  &pi=IANp88wHLhou6PA3'
+'''
 
-CMD=&GO=my_network.htm&SET0= 53813335 %3D d%252C 7C %253A FF %253A 48 %253A 70 %253A 8D %253A 8A %253B 
-
- &pi=IANp88wHLhou6PA3'
-
-#  #3D included in sendForm
-#  53813335 = known_devices_update
-#  d%252C = d%2C = d,
-#  %253A = %3A = : ( MAC addr ) 
-#  %253B = %3B = ; ( end of command? ) 
-```
+* '#3D' included in sendForm
+* 53813335 = known_devices_update value from cgi_myNetwork
+* 'd%252C' = 'd%2C' = "d," from deleteDev
+* '%253A' = '%3A' = : in mac addresses
+* '%253B' = '%3B' = ; ( end of command? ) 
