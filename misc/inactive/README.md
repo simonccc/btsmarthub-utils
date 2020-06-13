@@ -77,13 +77,14 @@ var known_device_list=[{mac:'0A%3AB2%3A02%3A7E%3A59%3AD1'
 addCfg("known_devices_update",94717334,'');
 ```
 
+cgi_owl.js doesn't really seem to be required but maybe it has a unique cfg value 
+
 
 ### /apply.cgi
 
 #### headers
 ```
-Origin: http://192.168.0.1
-Referer: http://192.168.0.1/my_network.htm
+Origin: http://ipofsmarthub
 ````
 
 is passed the value of the cfg item known_devices_update, the "d," from deleteDev, the encoded MAC and the pi parameter eg:
