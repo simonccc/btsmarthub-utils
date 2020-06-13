@@ -1,5 +1,5 @@
 FROM alpine:latest
-RUN apk add --no-cache python3 pip3
+RUN apk add --no-cache python3
 RUN python3 -m ensurepip && \
     rm -r /usr/lib/python*/ensurepip && \
     pip3 install --no-cache --upgrade pip setuptools wheel && \
