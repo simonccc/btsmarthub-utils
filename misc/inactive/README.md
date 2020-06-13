@@ -1,5 +1,21 @@
 # Deleting inactive devices
 
+## my_network.htm
+The page listing the known network devices; contains a value for pi and some other vars
+
+eg
+
+```
+<meta name="pi" content="28Xt37r1077bM3N4">
+
+<script language="JavaScript" type="text/javascript">
+       var CGIs = ["myNetwork","owl"];
+</script>
+
+<script src="./nonAuth/globals.js"></script>
+```
+
+## apply.cgi
 A call is made to apply.cgi from globals.js with these parameters
 
 
