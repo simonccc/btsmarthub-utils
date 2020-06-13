@@ -21,7 +21,6 @@ mac_c = 1
 vars = content.decode().split("\n")
 
 for var in vars:
-#    print(var)
     var_types = var.split(",")
 
     # fix for the first mac address
@@ -33,6 +32,7 @@ for var in vars:
     try:
       mac = urllib.parse.unquote(var_types[0].split(":")[1])
       rmac = var_types[0].split(":")[1]
+      rmac2 = rmac.replace('%3A', '%253A')
     except:
      continue 
 
@@ -74,5 +74,5 @@ for var in vars:
     active = urllib.parse.unquote(var_types[9].split(":")[1]).replace('\'', '')
     port = urllib.parse.unquote(var_types[11].split(":")[1]).replace('\'', '')
 
-    print(str(mac_c) + ' ' + print_c('blue', mac),rmac,ip, print_c('yellow',hostname),print_c('green',port),active)
+    print(str(mac_c) + ' ' + print_c('blue', mac),rmac,rmac2,ip, print_c('yellow',hostname),print_c('green',port),active)
 

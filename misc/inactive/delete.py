@@ -1,40 +1,25 @@
 #!/usr/bin/env python3 
 
-import time
-import requests
-import sys
-import hashlib
-import urllib.parse
+import datetime, re, requests, hashlib, sys
 sys.path[0:0] = ['../../']
 import config as cfg
 
 login_body = ('O=helpdesk.htm&usr=admin&pws=' + hashlib.md5(cfg.hub['pass'].encode('utf-8')).hexdigest())
+login = requests.post(cfg.hub['url'] + '/login.cgi', cookies=cfg.cookies, data=login_body)
+pi = requests.get(cfg.hub['url'] + '/cgi/renewPi.js', cookies=cfg.cookies).text
+ts = int(datetime.datetime.now().strftime('%s%f')[:-3])
+n = requests.get(cfg.hub['url'] + '/cgi/cgi_myNetwork.js?ts=' + str(ts)).text
+for line in n.splitlines():
+    if re.search('known_devices_update', line):
+        cfg_id = line.split(',')[1]
 
-# login to router
-def login():
-  print('logging in...')
-  login = requests.post(cfg.hub['url'] + '/login.cgi', cookies=cfg.cookies, data=login_body, allow_redirects=False)
-  time.sleep(1)
-
-def getpi():
-  print('getting pi')
-  pi = requests.get(cfg.hub['url'] + '/cgi/renewPi.js', cookies=cfg.cookies)
-  return(pi.text)
-
-login()
-pi = getpi()
-print(pi)
-
-delstring = ('CMD=&GO=my_network.htm&SET0='+ '50426637' + '%3Dd%252C' + 'DE%2533A49%2533AAE%2533AA9%2533A3D%2533A5F' + '%253B' + '&pi=' + pi)
-
-#delstring2 = (urllib.parse.quote('CMD=&GO=my_network.htm&SET0=50426637=d,DE:49:AE:A9:3D:5F;' + '&pi=' + pi))
-#print(delstring)
-#print(delstring2)
-
-
-
-delete = requests.post(cfg.hub['url'] + '/apply.cgi', cookies=cfg.cookies,  data=(delstring))
+delstring = ('CMD=&GO=my_network.htm&SET0='+ cfg_id + '%3Dd%252C' + sys.argv[1] + '%253B' + '&pi=' + pi)
+header = {'Origin': cfg.hub['url']}
+delete = requests.post(cfg.hub['url'] + '/apply.cgi', data=(delstring), cookies=cfg.cookies, headers=header)
 print(delete.request.headers)
 print(delete.request.body)
 print (delete.status_code)
-print (delete.text)
+#go = requests.get(cfg.hub['url'] + '/my_network.htm', cookies=cfg.cookies)
+#print (go.status_code)
+
+
