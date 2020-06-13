@@ -73,37 +73,32 @@ function sendForm(cPage, _cmd, _waiting){
 ### /cgi/cgi_myNetwork.js
 globals.js also calls the CGI's listed in /my_network.htm with the current timestamp as a parameter
 
+eg:
 ```
 /cgi/cgi_myNetwork.js?t=1592032536131
 /cgi/cgi_owl.js?t=1592032536131
 ```
+cgi_owl.js has some additional cfg vars to cgi_myNetwork.js but we only need 'known_devices_update'
 
-cgi_myNetwork.js contains the known_devices_update cfg var we need and a variable known_device_list which seems to be the list of all known macs
 
+cgi_myNetwork.js:
 ```
-var known_device_list=[{mac:'0A%3AB2%3A02%3A7E%3A59%3AD1'
-addCfg("known_devices_update",94717334,'');
+var known_device_list=[{...}] ( the known mac addresses ) 
+addCfg("known_devices_update",94717334,'');  ( the current value of 'known_devices_update' cfg variable ) 
 ```
-
-cgi_owl.js has some additional cfg vars to cgi_myNetwork.js
 
 
 ### /apply.cgi
+finally the request is POST'd to apply.cgi - values broken down below
 
 ```
 CMD=&GO=my_network.htm&SET0=53813335%3Dd%252C7C%253AFF%253A48%253A70%253A8D%253A8A%253B&pi=IANp88wHLhou6PA3
 
-CMD=&GO=my_network.htm&SET0= 
-53813335 
-%3D 
-d%252C 
-7C %253A FF %253A 48 %253A 70 %253A 8D %253A 8A 
-%253B  
-&pi=IANp88wHLhou6PA3
+CMD=&GO=my_network.htm&SET0=  ( sendForm / deleteDev ) 
+53813335  ( known_devices_update value from cgi_myNetwork ) 
+%3D  ( sendForm ) 
+d%252C  ( 'd%252C' = 'd%2C' = "d," from deleteDev ) 
+7C %253A FF %253A 48 %253A 70 %253A 8D %253A 8A ( mac address where '%253A' = '%3A' = : )
+%253B  ( '%253B' = '%3B' = ; end of command ) 
+&pi=IANp88wHLhou6PA3 ( pi ) 
 ```
-- 53813335 = known_devices_update value from cgi_myNetwork
-- '#3D' included in sendForm
-- 'd%252C' = 'd%2C' = "d," from deleteDev
-- '%253A' = '%3A' = : in mac addresses
-- '%253B' = '%3B' = ; end of command
-- 'pi' = pi
