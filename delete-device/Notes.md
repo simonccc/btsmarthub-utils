@@ -94,7 +94,7 @@ CMD=&GO=my_network.htm&SET0= 53813335 %3D d%252C 7C %253A FF %253A 48 %253A 70 %
 - '%253A' = '%3A' = : in mac addresses
 - '%253B' = '%3B' = ; ( end of command? )
 
-## steps to delete a device
+# steps to delete a device
 
 1. login and get a cookie as usual
 2. get pi
