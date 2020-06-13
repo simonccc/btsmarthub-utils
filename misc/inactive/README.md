@@ -43,6 +43,23 @@ function sendForm(cPage, _cmd, _waiting){
         }
 ```
 
+globals calls the CGI's listed in /my_network.htm eg:
+
+```
+/cgi/cgi_myNetwork.js?t=1592032536131
+/cgi/cgi_owl.js?t=1592032536131
+```
+
+### /cgi/cgi_myNetwork.js
+
+contains the known_devices_update cfg var we need and a variable known_device_list which seems to be the list of all known macs
+
+```
+var known_device_list=[{mac:'0A%3AB2%3A02%3A7E%3A59%3AD1'
+addCfg("known_devices_update",94717334,'');
+```
+
+
 ### /apply.cgi
 
 is passed the value of the cfg item known_devices_update, the "d," from deleteDev, the encoded MAC and the pi parameter eg:
