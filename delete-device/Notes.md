@@ -93,4 +93,12 @@ CMD=&GO=my_network.htm&SET0= 53813335 %3D d%252C 7C %253A FF %253A 48 %253A 70 %
 * 53813335 = known_devices_update value from cgi_myNetwork
 * 'd%252C' = 'd%2C' = "d," from deleteDev
 * '%253A' = '%3A' = : in mac addresses
-* '%253B' = '%3B' = ; ( end of command? ) 
+* '%253B' = '%3B' = ; ( end of command? )
+
+## steps to delete a device
+* login and get a cookie as usual
+* get pi
+* get the known_devices_update by calling cgi_myNetwork.js with the current timestamp
+* generate the post body with the known_devices_update id, the encoded MAC and pi per the string specified in deleteDevice and sendForm
+
+

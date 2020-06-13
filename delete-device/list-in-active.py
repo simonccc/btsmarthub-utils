@@ -4,7 +4,7 @@ import requests
 import urllib.parse
 import re
 import sys
-sys.path[0:0] = ['../../']
+sys.path[0:0] = ['../']
 import config as cfg
 
 # request page
@@ -74,5 +74,6 @@ for var in vars:
     active = urllib.parse.unquote(var_types[9].split(":")[1]).replace('\'', '')
     port = urllib.parse.unquote(var_types[11].split(":")[1]).replace('\'', '')
 
-    print(str(mac_c) + ' ' + print_c('blue', mac),rmac,rmac2,ip, print_c('yellow',hostname),print_c('green',port),active)
+#    print(str(mac_c) + ' ' + mac,rmac2,ip, hostname, active)
+    print(active,hostname,ip,mac)
 

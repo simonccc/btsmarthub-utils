@@ -1,8 +1,11 @@
 # btsmarthub-utils
 
-Some scripts and a docker container that poll the BT Smart Hub 2 to get the logs and internet usage per device and export them to syslog and graphite. 
+scripts / container that poll the BT Smart Hub 2 to get logs and internet usage per device
+the logs and data can be exported to syslogs / graphite
 
-I've only tested against this combo: 
+New: a script to delete devices from the smarthub
+
+I've only tested against this combo:
 ```
 product_name    "HomeHub6DX"
 fw_ver  "v0.16.02.08304-BT (Fri Aug 30 17:58:36 2019)"
@@ -10,14 +13,15 @@ board_ver  "R01"
 gui_ver  "1.56 15_02_2019"
 ```
 
-
-# Features 
+# Features
 
 * scrape the logs displayed in the normal gui and tail -f them in the console or send to syslog
 
-* poll the internet usage for mac addresses connected and send the metrics to graphite 
+* poll the internet usage for mac addresses connected and send the metrics to graphite
 
-* docker image to ease deployment 
+* docker image to ease deployment
+
+* delete a device from the smarthub from the command line
 
 # manual setup
 
@@ -31,7 +35,7 @@ copy `example-config.py` to `config.py` and edit it
 
 'logger' are the syslog server details
 
-'colors' to change or disable colors in the tail like output 
+'colors' to change or disable colors in the tail like output
 
 'cookies' is used for logging in to the router; urn is just a random thing - can be changed if required
 
@@ -44,6 +48,8 @@ copy `example-config.py` to `config.py` and edit it
 * logs-syslog.py - send's the logs to a remote syslog server ( only tested with logstash ) 
 
 * bandwidth-graphite.py - sends bandwidth info per mac addr to graphite
+
+* delete-device - scripts for deleting inactive devices
 
 see misc for other small unfinished things that may be useful
 
@@ -76,7 +82,6 @@ services:
 ```
 setting DEBUG sends the logs and metrics reports / data to stderr
 
-
 # misc smarthub info that may save you some time
 
 I spent a few hours diagnosing why some bridge interfaces on my homelab virtualisation setup were showing dropped RX packets. I initally suspected some powerline adapters; but it turned out to be the smarthub doing this kind of thing..
@@ -105,4 +110,3 @@ table netdev filter {
     }
 }
 ```
-

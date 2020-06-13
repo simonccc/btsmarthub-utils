@@ -1,7 +1,17 @@
 #!/usr/bin/env python3
 
 import datetime, re, requests, hashlib, sys
-sys.path[0:0] = ['../../']
+
+# check for mac
+if len(sys.argv) < 2:
+    print (sys.argv[0], 'mac:addr')
+    exit(1)
+
+# encode mac addr
+mac=re.sub(':', '%253A', sys.argv[1])
+
+# load cfg
+sys.path[0:0] = ['../']
 import config as cfg
 
 # login
@@ -19,7 +29,7 @@ for line in n.splitlines():
         cfg_id = line.split(',')[1]
 
 # prepare the post body and header
-delstring = ('CMD=&GO=my_network.htm&SET0='+ cfg_id + '%3Dd%252C' + sys.argv[1] + '%253B' + '&pi=' + pi)
+delstring = ('CMD=&GO=my_network.htm&SET0='+ cfg_id + '%3Dd%252C' + mac + '%253B' + '&pi=' + pi)
 
 # send delete request
 delete = requests.post(cfg.hub['url'] + '/apply.cgi', data=(delstring), cookies=cfg.cookies)
