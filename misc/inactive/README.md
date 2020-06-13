@@ -80,6 +80,12 @@ addCfg("known_devices_update",94717334,'');
 
 ### /apply.cgi
 
+#### headers
+```
+Origin: http://192.168.0.1
+Referer: http://192.168.0.1/my_network.htm
+````
+
 is passed the value of the cfg item known_devices_update, the "d," from deleteDev, the encoded MAC and the pi parameter eg:
 ```
 'CMD=&GO=my_network.htm&SET0=53813335%3Dd%252C7C%253AFF%253A48%253A70%253A8D%253A8A%253B&pi=IANp88wHLhou6PA3'
