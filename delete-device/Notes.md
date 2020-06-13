@@ -78,27 +78,27 @@ var known_device_list=[{mac:'0A%3AB2%3A02%3A7E%3A59%3AD1'
 addCfg("known_devices_update",94717334,'');
 ```
 
-cgi_owl.js doesn't really seem to be required but maybe it has a unique cfg value 
+cgi_owl.js has some cfg vars missing from cgi_myNetwork.js but we don't need them..
 
 
 ### /apply.cgi
 
 ```
 CMD=&GO=my_network.htm&SET0=53813335%3Dd%252C7C%253AFF%253A48%253A70%253A8D%253A8A%253B&pi=IANp88wHLhou6PA3
-
 CMD=&GO=my_network.htm&SET0= 53813335 %3D d%252C 7C %253A FF %253A 48 %253A 70 %253A 8D %253A 8A %253B  &pi=IANp88wHLhou6PA3
 ```
 
-* '#3D' included in sendForm
-* 53813335 = known_devices_update value from cgi_myNetwork
-* 'd%252C' = 'd%2C' = "d," from deleteDev
-* '%253A' = '%3A' = : in mac addresses
-* '%253B' = '%3B' = ; ( end of command? )
+- 53813335 = known_devices_update value from cgi_myNetwork
+- '#3D' included in sendForm
+- 'd%252C' = 'd%2C' = "d," from deleteDev
+- '%253A' = '%3A' = : in mac addresses
+- '%253B' = '%3B' = ; ( end of command? )
 
 ## steps to delete a device
-* login and get a cookie as usual
-* get pi
-* get the known_devices_update by calling cgi_myNetwork.js with the current timestamp
-* generate the post body with the known_devices_update id, the encoded MAC and pi per the string specified in deleteDevice and sendForm
+
+1. login and get a cookie as usual
+2. get pi
+3. get the known_devices_update by calling cgi_myNetwork.js with the current timestamp
+4. generate the post body with the known_devices_update id, the encoded MAC and pi per the string specified in deleteDevice and sendForm
 
 
