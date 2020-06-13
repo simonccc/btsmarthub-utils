@@ -31,6 +31,7 @@ change_pi_var.request("cgi/renewPi.js", "GET");
 ```
 #### URL encoding
 
+```
 // our CFG items use ";" as delimiter, it is not suitable for javascrip
 // we need conver it to "%3B" from CFG_CGI routing if it is string conent
 // also embedded inside CFG field.
