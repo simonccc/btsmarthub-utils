@@ -1,7 +1,8 @@
 # btsmarthub-utils
 
 scripts / container that poll the BT Smart Hub 2 to get logs and internet usage per device
-the logs and data can be exported to syslogs / graphite
+
+the logs and data can also be exported to syslog / graphite
 
 New: a script to delete devices from the smarthub
 
@@ -31,27 +32,23 @@ python3
 
 copy `example-config.py` to `config.py` and edit it
 
-'hub' are the smarthub details
-
-'logger' are the syslog server details
-
+```
+'hub' is the smarthub name eg smarthub.home or IP address
+'logger' syslog server name/IP:port
 'colors' to change or disable colors in the tail like output
-
-'cookies' is used for logging in to the router; urn is just a random thing - can be changed if required
-
+'cookies' urn is a random string used in requests
 'graphite' graphite server and prefix for the smarthub data ( only tested on port 2003 ) 
+```
 
 # cli tools
 
+```
 * logs-tail.py - tails the log to stdout with colors
-
 * logs-syslog.py - send's the logs to a remote syslog server ( only tested with logstash ) 
-
 * bandwidth-graphite.py - sends bandwidth info per mac addr to graphite
-
-* delete-device - scripts for deleting inactive devices
-
-see misc for other small unfinished things that may be useful
+* delete-device/ - scripts for deleting inactive devices
+* misc/ other small unfinished things that may be useful
+```
 
 # docker 
 
