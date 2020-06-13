@@ -1,31 +1,26 @@
 # Deleting inactive devices
 
-Notes on how this works...
+Notes on how this works... functions and code below simplfied for clarity
 
 ### /my_network.htm
 page listing the known network devices, the vars for pi and CGI's to be called to generate the page
 
 ```
 <meta name="pi" content="28Xt37r1077bM3N4">
-
-<script language="JavaScript" type="text/javascript">
-       var CGIs = ["myNetwork","owl"];
-</script>
-
-<script src="./nonAuth/globals.js"></script>
+var CGIs = ["myNetwork","owl"];
 ```
 
 ### /nonAuth/globals.js
+is called by /my_network.htm and provides a bunch of functions
 
 #### pi
-seems to be the identifier linking a unique set of cfgid's 
+seems to be the identifier linking a unique set of cfg ids
 ```
 function renew_CGI_pi()
-	
-change_pi_var = new HTTP_Request(change_pi);
-change_pi_var.request("cgi/renewPi.js", "GET");
-	for(var i=0; i < CGIs.length;i++){
-		k="cgi/cgi_"+CGIs[i]+'.js?t='+ Date.now();		
+  change_pi_var = new HTTP_Request(change_pi);
+  change_pi_var.request("cgi/renewPi.js", "GET");
+	  for(var i=0; i < CGIs.length;i++){
+		  k="cgi/cgi_"+CGIs[i]+'.js?t='+ Date.now()
 ```
 
 #### URL encoding
@@ -38,38 +33,45 @@ there is some kind of double encoding going on
 // here use str2HTML() to conver to back, but some special operator like
 // ":",".",",","-" can not be convert due to multi-fields CFG item use it
 // as delimiter. ":" for MAC, "." for IP, "-" for range, "," for multi-range
-
-function deleteDev(order, j, device){
-...     
-setCfg("known_devices_update", "d," + devicesList_Iface[order].getMac(j) + ";");
-sendForm("my_network.htm", "", "");
-...
-}
-
-function sendForm(cPage, _cmd, _waiting){
-        var url ="/apply.cgi";
-        xmlhttp.open("POST", url, true);
-        var params = "CMD="+_cmd+ "&GO="+cPage;
-
-        for (var i=0;i<CA.length;i++){
-                if (CA[i].v!=CA[i].o){
-                        temp = setCfg(CA[i].n, CA[i].v)
-                        params = params + "&SET" + sub + "=" + String(CA[i].i) + "%3D"+ temp;
-                        sub++;
-                }
-        }
 ```
 
-so globals.js also calls the CGI's listed in /my_network.htm eg:
+#### delete device
+
+this gives us the parameters to the apply.cgi POST later on
+```
+function deleteDev(order, j, device){
+setCfg("known_devices_update", "d," + devicesList_Iface[order].getMac(j) + ";");
+}
+```
+
+#### sendForm
+provides the rest of the POST body we need to build
+
+```
+function sendForm(cPage, _cmd, _waiting){
+ var url ="/apply.cgi";
+ xmlhttp.open("POST", url, true);
+ var params = "CMD="+_cmd+ "&GO="+cPage;
+
+ for (var i=0;i<CA.length;i++){
+   if (CA[i].v!=CA[i].o){
+     temp = setCfg(CA[i].n, CA[i].v)
+     params = params + "&SET" + sub + "=" + String(CA[i].i) + "%3D"+ temp;
+     sub++;
+   }
+}
+```
+
+
+### /cgi/cgi_myNetwork.js
+globals.js also calls the CGI's listed in /my_network.htm with the current timestamp as a parameter
 
 ```
 /cgi/cgi_myNetwork.js?t=1592032536131
 /cgi/cgi_owl.js?t=1592032536131
 ```
 
-### /cgi/cgi_myNetwork.js
-
-contains the known_devices_update cfg var we need and a variable known_device_list which seems to be the list of all known macs
+cgi_myNetwork.js contains the known_devices_update cfg var we need and a variable known_device_list which seems to be the list of all known macs
 
 ```
 var known_device_list=[{mac:'0A%3AB2%3A02%3A7E%3A59%3AD1'
@@ -82,10 +84,9 @@ cgi_owl.js doesn't really seem to be required but maybe it has a unique cfg valu
 ### /apply.cgi
 
 ```
-Origin: http://ipofsmarthub
 CMD=&GO=my_network.htm&SET0=53813335%3Dd%252C7C%253AFF%253A48%253A70%253A8D%253A8A%253B&pi=IANp88wHLhou6PA3
 
-CMD=&GO=my_network.htm&SET0= 53813335 %3D d%252C 7C %253A FF %253A 48 %253A 70 %253A 8D %253A 8A %253B  &pi=IANp88wHLhou6PA3'
+CMD=&GO=my_network.htm&SET0= 53813335 %3D d%252C 7C %253A FF %253A 48 %253A 70 %253A 8D %253A 8A %253B  &pi=IANp88wHLhou6PA3
 ```
 
 * '#3D' included in sendForm
