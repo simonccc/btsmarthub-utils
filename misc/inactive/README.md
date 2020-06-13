@@ -1,6 +1,6 @@
 # Deleting inactive devices
 
-## my_network.htm
+### /my_network.htm
 The page listing the known network devices; contains a value for pi and some other vars
 
 ```
@@ -30,9 +30,6 @@ sendForm("my_network.htm", "", "");
 }
 
 function sendForm(cPage, _cmd, _waiting){
-        var sub=0;
-        var temp;
-        var xmlhttp=new XMLHttpRequest();
         var url ="/apply.cgi";
         xmlhttp.open("POST", url, true);
         var params = "CMD="+_cmd+ "&GO="+cPage;
@@ -46,17 +43,19 @@ function sendForm(cPage, _cmd, _waiting){
         }
 ```
 
+### /apply.cgi
 
-## apply.cgi
-
-is therefore passed the value of the cfg item known_devices_update, the "d," from deleteDev, the encoded MAC and the pi parameter eg:
+is passed the value of the cfg item known_devices_update, the "d," from deleteDev, the encoded MAC and the pi parameter eg:
 ```
 'CMD=&GO=my_network.htm&SET0=53813335%3Dd%252C7C%253AFF%253A48%253A70%253A8D%253A8A%253B&pi=IANp88wHLhou6PA3'
 
-'CMD=&GO=my_network.htm&SET0= 53813335 %3D d%252C 7C %253A FF %253A 48 %253A 70 %253A 8D %253A 8A %253B &pi=IANp88wHLhou6PA3'
+CMD=&GO=my_network.htm&SET0= 53813335 %3D d%252C 7C %253A FF %253A 48 %253A 70 %253A 8D %253A 8A %253B 
 
+ &pi=IANp88wHLhou6PA3'
 
+#  #3D included in sendForm
+#  53813335 = known_devices_update
 #  d%252C = d%2C = d,
-#  %253A = %3A = :
-#  %253B = %3B = ;
+#  %253A = %3A = : ( MAC addr ) 
+#  %253B = %3B = ; ( end of command? ) 
 ```
