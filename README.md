@@ -4,20 +4,19 @@ scripts / container that poll the BT Smart Hub 2 to get logs and internet usage 
 
 the logs and data can also be exported to syslog / graphite
 
-New: a script to delete devices from the smarthub
+tested against:
 
-I've tested against these versions:
 ```
 product_name    "HomeHub6DX"
 
-fw_ver  "v0.16.02.08304-BT (Fri Aug 30 17:58:36 2019)"
-fw_ver  "v0.17.01.12312-BT (Mon May 11 18:49:53 2020)"
+fw_ver "v0.21.03.07094-BT (Thu Jul  9 17:43:55 2020)"
 
 board_ver  "R01"
 gui_ver  "1.56 15_02_2019"
 boot_ver    " 0.1.7-BT (Thu Nov 30 09:45:22 2017)"
 
 ```
+
 
 # Features
 
@@ -27,7 +26,7 @@ boot_ver    " 0.1.7-BT (Thu Nov 30 09:45:22 2017)"
 
 * docker image to ease deployment
 
-* delete a device from the smarthub from the command line
+* see delete-device dir for a script to delete inactive devices
 
 # manual setup
 

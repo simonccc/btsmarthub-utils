@@ -46,6 +46,6 @@ for var in vars:
         continue
     print(print_c('green',stats[0]), print_c('yellow', urllib.parse.unquote(stats[1])))
     count += 1
-    if (count > 22):
+    if (count > 21):
       break
 
