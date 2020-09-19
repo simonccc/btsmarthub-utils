@@ -16,6 +16,7 @@ gui_ver  "1.56 15_02_2019"
 boot_ver    " 0.1.7-BT (Thu Nov 30 09:45:22 2017)"
 
 ```
+see the pre0.21 branch for support for older versions 
 
 
 # Features
