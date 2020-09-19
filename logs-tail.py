@@ -69,13 +69,13 @@ while True:
     vars = content.decode().split(";")
 
     # split the event log var 
-    events = (vars[34].split(","))
+    events = (vars[32].split(","))
 
     for event in events:
 
         # first ( latest ) event needs cleaning up
-        if  event_count == 0:
-            event  = event.replace("var evtlog_list=[", "").strip('\r\n')
+        if event_count == 0:
+           event  = event.replace("var evtlog_list=[", "").strip('\r\n')
 
         # decode the content
         url_decoded = urllib.parse.unquote(event)

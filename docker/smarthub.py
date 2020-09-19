@@ -138,7 +138,7 @@ while True:
     vars = content.decode().split(";")
 
     # split the event log var
-    events = (vars[34].split(","))
+    events = (vars[32].split(","))
 
     for event in events:
 
