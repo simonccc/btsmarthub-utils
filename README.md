@@ -59,7 +59,9 @@ copy `example-config.py` to `config.py` and edit it
 
 `docker pull simonczuzu/btsmarthub-utils`
 
-or build the image locally using the script
+or for the pre 0.21 version:
+
+`docker pull simonczuzu/btsmarthub-utils:pre021`
 
 example docker-compose file
 
