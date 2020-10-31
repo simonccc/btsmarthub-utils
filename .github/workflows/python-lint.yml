@@ -1,11 +1,11 @@
-name: Python Lint
+name: btsmarthub utils tests
 
-on: [push]
+on:
+  workflow_dispatch:
 
 jobs:
-  pthon-lint:
+  test:
 
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ricardochaves/python-lint@v1.3.0
