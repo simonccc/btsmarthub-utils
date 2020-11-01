@@ -29,7 +29,7 @@ boot_ver        " 0.1.7-BT (Thu Nov 30 09:45:22 2017)"
 
 # manual setup
 
-python3 
+you'll probably need python3 
 
 `pip3 install -r requirements.txt`
 
