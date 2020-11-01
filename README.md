@@ -1,33 +1,31 @@
 # btsmarthub-utils
 
-scripts / container that poll the BT Smart Hub 2 to get logs and internet usage per device
-
-the logs and data can also be exported to syslog / graphite
+scripts for polling the BT Smart Hub 2 to get logs and internet usage per device
 
 tested against:
 
 ```
 product_name    "HomeHub6DX"
-
-fw_ver "v0.21.03.07094-BT (Thu Jul  9 17:43:55 2020)"
-
-board_ver  "R01"
-gui_ver  "1.56 15_02_2019"
-boot_ver    " 0.1.7-BT (Thu Nov 30 09:45:22 2017)"
-
+fw_ver          "v0.21.03.07094-BT (Thu Jul  9 17:43:55 2020)"
+board_ver       "R01"
+gui_ver         "1.56 15_02_2019"
+boot_ver        " 0.1.7-BT (Thu Nov 30 09:45:22 2017)"
 ```
-see the pre0.21 branch for support for older versions 
+
+# branches
+* ```pre0.21``` branch for support for older versions 
+* ```dockerhub``` branch for the dockerhub version / docker image
 
 
 # Features
 
 * scrape the logs displayed in the normal gui and tail -f them in the console or send to syslog
 
-* poll the internet usage for mac addresses connected and send the metrics to graphite
+* poll the internet usage for devices connected and send the metrics to graphite
 
 * docker image to ease deployment
 
-* see delete-device dir for a script to delete inactive devices
+* see the ```delete-device``` dir for a script to delete inactive devices
 
 # manual setup
 
