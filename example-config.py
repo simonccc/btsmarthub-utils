@@ -16,3 +16,7 @@ logger = {'host': 'syslog-server',
           'port': 514}
 graphite = {'g_host': 'graphite-server',
             'prefix': 'smarthub'}
+
+snmp = {
+        "3F:97:0A:4A:AB:90": [ '1', 'yourdevice' ]
+        }
