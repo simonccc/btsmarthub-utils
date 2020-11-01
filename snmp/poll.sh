@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 while :;
 do
-./snmp-poller.py > smarthub.db
-echo polled
+./snmp-poller.py
+echo -n "polled "
+date
 sleep 10
 done

@@ -34,9 +34,10 @@ for var in vars:
 
   # remove line breaks
   var_o = var.strip('\r\n')
+
+  # product name
   if ( re.search('product_name', var_o )):
        product_name = get_var1(var_o)
-#       print('product_name:', product_name)
 
   if ( re.search('serial_no', var_o )):
        serial_no = get_var1(var_o)
@@ -46,11 +47,22 @@ for var in vars:
        fw_ver = get_var1(var_o)
 #       print('fw_ver:', fw_ver)
 
+  # uptime
   if ( re.search('sysuptime', var_o )):
-       sysuptime = get_var1(var_o)
-#       print('sysuptime:', sysuptime)
+       sysuptime = str(get_var1(var_o) + '00')
 
 #  print(var_o)
 
-print('1.3.6.1.2.1.1.1.0' + ':' + product_name + '-' + fw_ver.split(' ')[0])
-print('1.3.6.1.2.1.1.3.0' + ':' + sysuptime)
+# open db file
+db = open('smarthub.db', "w")
+
+# sysDesc
+db.write('1.3.6.1.2.1.1.1.0' + '_' + product_name + '-' + fw_ver.split(' ')[0] +'\n')
+
+# device uptime
+db.write('1.3.6.1.2.1.1.3.0' + '_' + sysuptime  + '\n')
+
+# int 1
+db.write('1.3.6.1.2.1.2.2.1.9.1' + '_' + sysuptime + '\n')
+
+db.close()

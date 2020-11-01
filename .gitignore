@@ -2,3 +2,4 @@ config.py
 config.py.*
 *.pyc
 docker-compose.yml
+smarthub.db
