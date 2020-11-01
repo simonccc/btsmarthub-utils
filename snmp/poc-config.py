@@ -1,6 +1,6 @@
 DATA = {
    # sysDesc
-  '1.3.6.1.2.1.1.1.0': octet_string('btsmarthub-snmpd-hack1'),
+   '1.3.6.1.2.1.1.1.0': lambda oid: octet_string((re.match('1.3.6.1.2.1.1.1.0:.*',(open('smarthub.db').read())).group()).split(':')[1]),
   # sets it as switchos
 #  '1.3.6.1.2.1.1.2.0': object_identifier('.1.3.6.1.4.1.14988.2'),
 

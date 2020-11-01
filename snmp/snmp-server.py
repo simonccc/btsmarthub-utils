@@ -15,7 +15,7 @@ import string
 import struct
 import sys
 import types
-from uptime import uptime
+import re
 
 from collections import Iterable
 from contextlib import closing
