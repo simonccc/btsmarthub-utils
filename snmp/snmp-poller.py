@@ -62,7 +62,38 @@ db.write('1.3.6.1.2.1.1.1.0' + '_' + product_name + '-' + fw_ver.split(' ')[0] +
 # device uptime
 db.write('1.3.6.1.2.1.1.3.0' + '_' + sysuptime  + '\n')
 
+# device rates
+vars = (requests.get(cfg.hub['url'] + '/cgi/cgi_basicMyDevice.js').content.decode()).split('var')
+rate = vars[2].split('\n')
+
+# define devices
+my_devices = {
+        "3C:97:0E:0A:AC:90": [ '1', 'leno' ]
+        }
+
+for rate in rate:
+ rate = urllib.parse.unquote(rate.replace('\'', ''))
+ rate_items = rate.split(',')
+
+ # mac bw lines start with timestamp
+ if ( re.search('timestamp', rate_items[0])):
+    rate_mac = (rate_items[2].replace('mac:', '')).upper()
+
+    try:
+      device =  my_devices[rate_mac]
+      tx = (rate_items[3].replace('tx:', ''))
+      rx = (rate_items[4].replace('rx:', ''))
+      rx = rx.replace('}','')
+      db.write('1.3.6.1.2.1.2.2.1.2.' + device[0] + '_' + device[1] + '\n')
+
+      leno_tx = (tx)
+      leno_rx = (rx)
+    except KeyError:
+      pass
+
 # int 1
 db.write('1.3.6.1.2.1.2.2.1.9.1' + '_' + sysuptime + '\n')
+db.write('1.3.6.1.2.1.2.2.1.10.1' + '_' + leno_rx + '\n')
+db.write('1.3.6.1.2.1.2.2.1.16.1' + '_' + leno_tx + '\n')
 
 db.close()

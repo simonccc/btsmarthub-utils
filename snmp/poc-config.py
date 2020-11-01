@@ -1,10 +1,10 @@
 DATA = {
 
-   # sysDesc
-   '1.3.6.1.2.1.1.1.0': lambda oid: octet_string((re.search(oid +'_.*',(open('smarthub.db').read())).group()).split('_')[1]),
+ # sysDesc
+ '1.3.6.1.2.1.1.1.0': lambda oid: octet_string((re.search(oid +'_.*',(open('smarthub.db').read())).group()).split('_')[1]),
 
-    # uptime
-    '1.3.6.1.2.1.1.3.0': lambda oid: timeticks(int((re.search(oid +'_.*',(open('smarthub.db').read())).group()).split('_')[1])),
+  # uptime
+  '1.3.6.1.2.1.1.3.0': lambda oid: timeticks(int((re.search(oid +'_.*',(open('smarthub.db').read())).group()).split('_')[1])),
 
   # sets it as switchos
 #  '1.3.6.1.2.1.1.2.0': object_identifier('.1.3.6.1.4.1.14988.2'),
@@ -23,7 +23,7 @@ DATA = {
 
   # interface 1
   '1.3.6.1.2.1.2.2.1.1.1': integer(1),
-  '1.3.6.1.2.1.2.2.1.2.1': octet_string('test adapter'),
+  '1.3.6.1.2.1.2.2.1.2.1': lambda oid: octet_string((re.search(oid +'_.*',(open('smarthub.db').read())).group()).split('_')[1]),
   # ethernet
   '1.3.6.1.2.1.2.2.1.3.1': integer(6),
   # mtu
@@ -42,7 +42,8 @@ DATA = {
   '1.3.6.1.2.1.2.2.1.9.1': lambda oid: timeticks(int((re.search(oid +'_.*',(open('smarthub.db').read())).group()).split('_')[1])),
 
 # inoct
-  '1.3.6.1.2.1.2.2.1.10.1': counter32(99122131),
+  '1.3.6.1.2.1.2.2.1.10.1': lambda oid: counter32(int((re.search(oid +'_.*',(open('smarthub.db').read())).group()).split('_')[1])),
+#  '1.3.6.1.2.1.2.2.1.10.1': counter32(99122131),
 
 # ??
   '1.3.6.1.2.1.2.2.1.11.1': counter32(0),
@@ -51,7 +52,7 @@ DATA = {
   '1.3.6.1.2.1.2.2.1.14.1': counter32(0),
   '1.3.6.1.2.1.2.2.1.15.1': counter32(0),
 # outoct
-  '1.3.6.1.2.1.2.2.1.16.1': counter32(342545234),
+  '1.3.6.1.2.1.2.2.1.16.1': lambda oid: counter32(int((re.search(oid +'_.*',(open('smarthub.db').read())).group()).split('_')[1])),
 
 # ??
   '1.3.6.1.2.1.2.2.1.17.1': counter32(0),
