@@ -19,7 +19,7 @@ DATA = {
   '1.3.6.1.2.1.1.6.0': octet_string('http://bthub.home/'),
 
   # interface count
-  '1.3.6.1.2.1.2.1.0': integer(1),
+  '1.3.6.1.2.1.2.1.0': lambda oid: integer(int((re.search(oid +'_.*',(open('smarthub.db').read())).group()).split('_')[1])),
 
   # interface 1
   '1.3.6.1.2.1.2.2.1.1.1': integer(1),

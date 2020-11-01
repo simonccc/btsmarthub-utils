@@ -10,18 +10,18 @@ login_body = ('O=helpdesk.htm&usr=admin&pws=' + hashlib.md5(cfg.hub['pass'].enco
 
 # login request
 def login():
-  login = requests.post(cfg.hub['url'] + '/login.cgi', cookies=cfg.cookies, data=login_body, allow_redirects=False)
+  login_request = requests.post(cfg.hub['url'] + '/login.cgi', cookies=cfg.cookies, data=login_body, allow_redirects=False)
 
 # request status page 
-r = requests.get(cfg.hub['url'] + '/cgi/cgi_helpdesk.js', cookies=cfg.cookies, allow_redirects=False)
+helpdesk_request = requests.get(cfg.hub['url'] + '/cgi/cgi_helpdesk.js', cookies=cfg.cookies, allow_redirects=False)
 
 # if a 302 login
-if (str(r.status_code) == '302'):
+if (str(helpdesk_request.status_code) == '302'):
   login()
-  r = requests.get(cfg.hub['url'] + '/cgi/cgi_helpdesk.js', cookies=cfg.cookies, allow_redirects=False)
+  helpdesk_request = requests.get(cfg.hub['url'] + '/cgi/cgi_helpdesk.js', cookies=cfg.cookies, allow_redirects=False)
 
-# get helpdesk page
-content = r.content
+# get helpdesk page content
+content = helpdesk_request.content
 
 # split content by ; 
 vars = content.decode().split(";")
@@ -63,6 +63,9 @@ db.write('1.3.6.1.2.1.1.1.0' + '_' + product_name + '-' + fw_ver.split(' ')[0] +
 
 # device uptime
 db.write('1.3.6.1.2.1.1.3.0' + '_' + sysuptime  + '\n')
+
+# interface count
+db.write('1.3.6.1.2.1.2.1.0' + '_' + str(len(cfg.snmp)) + '\n')
 
 # device rates
 # array of var?
