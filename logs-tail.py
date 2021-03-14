@@ -11,6 +11,9 @@ import math
 # local config
 import config as cfg
 
+# year hack
+year = (' ' + str((datetime.datetime.now()).year))
+
 # body of login request
 login_body = ('O=helpdesk.htm&usr=admin&pws=' + hashlib.md5(cfg.hub['pass'].encode('utf-8')).hexdigest())
 
@@ -68,7 +71,7 @@ while True:
     content = r.content
     vars = content.decode().split(";")
 
-    # split the event log var 
+    # split the event log var
     events = (vars[32].split(","))
 
     for event in events:
@@ -87,7 +90,7 @@ while True:
         event_split = event.split(". ")
 
         # add the in year ( fix me ) 
-        log_time = (event_split[0] + ' 2020')
+        log_time = (event_split[0] + year)
         log_event = (event_split[1])
 
         # convert the log date to timestamp

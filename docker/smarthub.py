@@ -75,6 +75,9 @@ if DOCKER_LOGHOST is not None:
 
   print('SYSLOGGING AS: ' + DOCKER_SMARTHUB_NAME + " TO: " +  DOCKER_LOGHOST + ':' + DOCKER_LOGHOST_PORT, file=sys.stderr)
 
+  # year hack
+  year = (' ' + str((datetime.datetime.now()).year))
+
   my_logger = logging.getLogger('smarthub')
   my_logger.setLevel(logging.DEBUG)
   handler = logging.handlers.SysLogHandler(address = (DOCKER_LOGHOST,int(DOCKER_LOGHOST_PORT)))
@@ -156,7 +159,7 @@ while True:
         event_split = event.split(". ")
 
         # add the in year ( fix me )
-        log_time = (event_split[0] + ' 2020')
+        log_time = (event_split[0] + year)
         log_event = (event_split[1])
 
         # convert the log date to timestamp
