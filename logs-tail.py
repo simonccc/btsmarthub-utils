@@ -1,13 +1,7 @@
-#!/usr/bin/env python3 
+#!/usr/bin/env python3
 
-import requests
-import time
-import datetime
-import urllib.parse
-import hashlib
-import signal
-import sys
-import math
+import requests, time, datetime, urllib.parse, hashlib, signal, sys, math, re
+
 # local config
 import config as cfg
 
@@ -22,7 +16,7 @@ max_event_count=50
 
 # login to router
 def login():
-  print('logging in...')
+#  print('logging in...')
   login = requests.post(cfg.hub['url'] + '/login.cgi', cookies=cfg.cookies, data=login_body, allow_redirects=False)
   time.sleep(1)
 
@@ -41,7 +35,7 @@ def signal_handler(signal, frame):
 # get the current ts - 10 seconds
 ts = int(time.time()) - 10
 short_start_time = timestamp_short(ts)
-print(print_c('green', (str(short_start_time)) + " starting smarthub tail..."))
+print(print_c('green', (str(short_start_time)) + " start up"))
 
 # Ctrl+C handler
 signal.signal(signal.SIGINT, signal_handler)
@@ -68,11 +62,22 @@ while True:
     continue
 
   else:
-    content = r.content
-    vars = content.decode().split(";")
+    # get page
+#    content = r.content
 
-    # split the event log var
-    events = (vars[32].split(","))
+#    events = ''
+#    event = ''
+
+    # split by var
+    vars = r.content.decode().split(";")
+
+    # search for the event log var
+    for var in vars:
+      if re.search('evtlog', var):
+        # split log by ,
+        events = (var.split(","))
+      else:
+        continue
 
     for event in events:
 
@@ -89,7 +94,7 @@ while True:
         # split the event by time and event
         event_split = event.split(". ")
 
-        # add the in year ( fix me ) 
+        # add the in year
         log_time = (event_split[0] + year)
         log_event = (event_split[1])
 
