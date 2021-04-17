@@ -62,12 +62,6 @@ while True:
     continue
 
   else:
-    # get page
-#    content = r.content
-
-#    events = ''
-#    event = ''
-
     # split by var
     vars = r.content.decode().split(";")
 
