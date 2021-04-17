@@ -2,18 +2,16 @@
 
 scripts for polling the BT Smart Hub 2 to get logs and internet usage per device
 
-tested against:
+supported versions:
 
 ```
-product_name    "HomeHub6DX"
-fw_ver          "v0.21.03.07094-BT (Thu Jul  9 17:43:55 2020)"
-board_ver       "R01"
-gui_ver         "1.56 15_02_2019"
-boot_ver        " 0.1.7-BT (Thu Nov 30 09:45:22 2017)"
+var fw_ver  "v0.26.03.01286-BT (Thu Jan 28 17:38:02 2021)"
+var board_ver  "R01"
+var gui_ver  "1.74 12_11_2020"
 ```
 
 # branches
-* ```pre0.21``` branch for support for older versions 
+* ```pre0.21``` branch for support for older firmware versions 
 * ```dockerhub``` branch for the dockerhub version / docker image
 
 
@@ -29,7 +27,7 @@ boot_ver        " 0.1.7-BT (Thu Nov 30 09:45:22 2017)"
 
 # manual setup
 
-you'll probably need python3 
+you'll need python3 
 
 `pip3 install -r requirements.txt`
 
