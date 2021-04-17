@@ -137,11 +137,16 @@ while True:
     continue
 
   else:
-    content = r.content
-    vars = content.decode().split(";")
+    # split by var
+    vars = r.content.decode().split(";")
 
-    # split the event log var
-    events = (vars[32].split(","))
+    # search for the event log var
+    for var in vars:
+      if re.search('evtlog', var):
+        # split log by ,
+        events = (var.split(","))
+      else:
+        continue
 
     for event in events:
 
