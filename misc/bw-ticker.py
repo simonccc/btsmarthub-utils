@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-import requests,re,sys,hashlib,time
-import urllib.parse
+import requests,re,sys,hashlib,time,urllib.parse
 sys.path[0:0] = ['../']
 import config as cfg
 
@@ -12,6 +11,12 @@ def login():
 # request status page
 def cgi_broadband():
   return(requests.get(cfg.hub['url'] + '/cgi/cgi_broadband.js?', cookies=cfg.cookies, allow_redirects=False))
+
+def print_c(color, string):
+  if cfg.tail_colors['enabled'] == 'true':
+   return(cfg.tail_colors[color] + string  + '\x1b[0m ')
+  else:
+   return(string)
 
 # https://stackoverflow.com/questions/12523586/python-format-size-application-converting-b-to-kb-mb-gb-tb
 # changed to 1000 for the smarthub
@@ -30,45 +35,67 @@ def humanbytes(B):
    elif MB <= B < GB:
       return '{0:.3f} MB'.format(B/MB)
    elif GB <= B < TB:
-      return '{0:.3f} GB'.format(B/GB)
+      return '{0:.5f} GB'.format(B/GB)
    elif TB <= B:
-      return '{0:.3f} TB'.format(B/TB)
+      return '{0:.6f} TB'.format(B/TB)
 
-def start():
-  r = cgi_broadband()
-  if (str(r.status_code) == '302'):
+def get_data():
+  if (str(cgi_broadband().status_code) == '302'):
     login()
-  return(cgi_broadband())
+  content = cgi_broadband().content
+  return(content.decode().split(";"))
 
 old_ticker = 0
+old_total = 0
+old_download = 0
+old_upload = 0
 
 # init
 while True:
-  r = start()
-  content = r.content
-  vars = content.decode().split(";")
 
   # split the event log var
-  for var in vars:
-    var_o = var.strip('\r\n')
-    var_o = str(var_o.replace('\n', ''))
-    var_list = var_o.split(",")
-    stats = var_list[0].split("=")
-    value = str(stats[1].replace("'", ''))
-    stat = str(stats[0].replace('var ', ''))
-    stat = str(stat.replace(' ', ''))
+  for var in get_data():
+    if (re.search('wan_conn_volume_list', var)):
+      bw = (var.split("'")[3]).split("%3B")
 
-    if (re.search('wan_conn_volume_list', stat)):
-      bw = (var_o.split("'")[3]).split("%3B")
-      ticker =  "total " + humanbytes(int(bw[0])) + " (" + humanbytes(int(bw[1])) + " D " + humanbytes(int(bw[2])) +" U)"
+      total = humanbytes(int(bw[0]))
+      download = humanbytes(int(bw[1]))
+      upload = humanbytes(int(bw[2]))
+
+      ticker =  total + "," + download + "," + upload
       if ( ticker != old_ticker ):
-        print(ticker)
+        print(print_c('yellow','total:') ,end ='')
+
+        if ( total != old_total ):
+            print(print_c('blue',total) , end ='')
+        if ( total == old_total ):
+            print(total + " ", end ='')
+
+        print(print_c('yellow','download:') ,end ='')
+
+        if ( download != old_download ):
+            print(print_c('green',download) , end ='')
+        if ( download == old_download ):
+            print(download + " ", end ='')
+
+        print(print_c('yellow','upload:') ,end ='')
+
+        if ( upload != old_upload ):
+            print(print_c('red',upload) , end ='')
+        if ( upload == old_upload ):
+            print(upload, end ='')
+
+        print()
+
         old_ticker = ticker
+        old_total = total
+        old_download = download
+        old_upload = upload
         break
 
-  #    print('no ' + ticker)
+      print('no ' + ticker)
       break
   #  print(',')
 
   # sleep
-  time.sleep(5)
+  time.sleep(10)
