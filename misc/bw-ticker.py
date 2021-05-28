@@ -13,10 +13,7 @@ def cgi_broadband():
   return(requests.get(cfg.hub['url'] + '/cgi/cgi_broadband.js?', cookies=cfg.cookies, allow_redirects=False))
 
 def print_c(color, string):
-  if cfg.tail_colors['enabled'] == 'true':
    return(cfg.tail_colors[color] + string  + '\x1b[0m ')
-  else:
-   return(string)
 
 # https://stackoverflow.com/questions/12523586/python-format-size-application-converting-b-to-kb-mb-gb-tb
 # changed to 1000 for the smarthub
@@ -31,13 +28,13 @@ def humanbytes(B):
    if B < KB:
       return '{0} {1}'.format(B,'Bytes' if 0 == B > 1 else 'Byte')
    elif KB <= B < MB:
-      return '{0:.3f} KB'.format(B/KB)
+      return '{0:.1f} KB'.format(B/KB)
    elif MB <= B < GB:
-      return '{0:.3f} MB'.format(B/MB)
+      return '{0:.1f} MB'.format(B/MB)
    elif GB <= B < TB:
-      return '{0:.5f} GB'.format(B/GB)
+      return '{0:.2f} GB'.format(B/GB)
    elif TB <= B:
-      return '{0:.6f} TB'.format(B/TB)
+      return '{0:.3f} TB'.format(B/TB)
 
 def get_data():
   if (str(cgi_broadband().status_code) == '302'):
@@ -67,14 +64,14 @@ while True:
         print(print_c('yellow','total:') ,end ='')
 
         if ( total != old_total ):
-            print(print_c('blue',total) , end ='')
+            print(print_c('green',total) , end ='')
         if ( total == old_total ):
             print(total + " ", end ='')
 
         print(print_c('yellow','download:') ,end ='')
 
         if ( download != old_download ):
-            print(print_c('green',download) , end ='')
+            print(print_c('blue',download) , end ='')
         if ( download == old_download ):
             print(download + " ", end ='')
 
@@ -93,9 +90,8 @@ while True:
         old_upload = upload
         break
 
-      print('no ' + ticker)
+      #print('no ' + ticker)
       break
-  #  print(',')
 
   # sleep
-  time.sleep(10)
+  time.sleep(30)
