@@ -1,31 +1,24 @@
 #!/usr/bin/env python3
 
-import requests, re, sys
+import requests,re,sys,hashlib
 import urllib.parse
-import hashlib
 sys.path[0:0] = ['../']
 import config as cfg
 
-# body of login request
-login_body = ('O=helpdesk.htm&usr=admin&pws=' + hashlib.md5(cfg.hub['pass'].encode('utf-8')).hexdigest())
 
 def login():
-  print(print_c('red', 'logging in...'))
+  login_body = ('O=helpdesk.htm&usr=admin&pws=' + hashlib.md5(cfg.hub['pass'].encode('utf-8')).hexdigest())
   login = requests.post(cfg.hub['url'] + '/login.cgi', cookies=cfg.cookies, data=login_body, allow_redirects=False)
 
-def print_c(color, string):
-  if cfg.tail_colors['enabled'] == 'true':
-   return(cfg.tail_colors[color] + string  + '\x1b[0m ')
-  else:
-   return(string)
-
 # request status page
-r = requests.get(cfg.hub['url'] + '/cgi/cgi_broadband.js?', cookies=cfg.cookies, allow_redirects=False)
+def cgi_broadband():
+  return(requests.get(cfg.hub['url'] + '/cgi/cgi_broadband.js?', cookies=cfg.cookies, allow_redirects=False))
 
 # if a 302 login
+r = cgi_broadband()
 if (str(r.status_code) == '302'):
   login()
-  r = requests.get(cfg.hub['url'] + '/cgi/cgi_broadband.js?', cookies=cfg.cookies, allow_redirects=False)
+  r = cgi_broadband()
 
 content = r.content
 vars = content.decode().split(";")
@@ -62,19 +55,21 @@ for var in vars:
   value = str(stats[1].replace("'", ''))
   stat = str(stats[0].replace('var ', ''))
   stat = str(stat.replace(' ', ''))
+
+  # counter
   count += 1
   if (count > 10):
     break
 
   if (re.search('wan_link_rate_list', stat)):
-    link = (var_o.split("'")[3]).replace("%3B", ";").split(";")
+    link = (var_o.split("'")[3]).split("%3B")
     upload = humanbytes(int(link[0]))
     download = humanbytes(int(link[1]))
     print("rate:  " + download + " down " + upload + " up")
 
   if (re.search('wan_conn_volume_list', stat)):
-    bw = (var_o.split("'")[3]).replace("%3B", ";")
-    total = humanbytes(int(bw.split(";")[0]))
-    download = humanbytes(int(bw.split(";")[1]))
-    upload = humanbytes(int(bw.split(";")[2]))
+    bw = (var_o.split("'")[3]).split("%3B")
+    total = humanbytes(int(bw[0]))
+    download = humanbytes(int(bw[1]))
+    upload = humanbytes(int(bw[2]))
     print("usage: " + total + " total (" + download + " down " + upload +" up)")
