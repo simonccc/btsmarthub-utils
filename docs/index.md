@@ -1,3 +1,0 @@
-# btsmarthub-utils
-
-coming soon
