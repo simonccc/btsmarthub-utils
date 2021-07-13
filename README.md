@@ -18,29 +18,4 @@ copy `example-config.py` to `config.py` and edit it
 'graphite' graphite server and prefix for the smarthub data ( only tested on port 2003 ) 
 ```
 
-# docker 
-
-`docker pull simonczuzu/btsmarthub-utils`
-
-example docker-compose file
-
-```yml
-version: '3'
-
-services:
-    smarthub:
-      image: smarthub
-      container_name: smarthub
-      restart: unless-stopped
-      hostname: smarthub
-      environment:
-        - DEBUG=yes
-        - URL=http://smarthub
-        - SMARTHUB_NAME=smarthub
-        - PASS=password
-        - LOGHOST=loghost
-        - LOGHOST_PORT=514
-        - G_HOST=graphitehost
-        - G_PREFIX=smarthub
-```
 
