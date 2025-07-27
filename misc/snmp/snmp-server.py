@@ -679,16 +679,17 @@ def parse_config(filename):
     """Read and parse a config"""
     oids = {}
     try:
-        with open(filename, 'rb') as conf_file:
-            data = conf_file.read()
-            out_locals = {}
-            exec(data, globals(), out_locals)
-            oids = out_locals['DATA']
-            for value in oids.values():
-                if isinstance(value, types.FunctionType):
-                    if value.__code__.co_argcount != 1:
-                        raise ConfigError('"{}" must have one argument'.format(value.__name__))
-            return oids
+        with open(filename, 'r', encoding='utf-8') as conf_file:
+            try:
+                oids = json.load(conf_file)
+                if not isinstance(oids, dict):
+                    raise ConfigError("Config file must contain a dictionary at the top level.")
+                for key, value in oids.items():
+                    if not isinstance(key, str) or not isinstance(value, dict):
+                        raise ConfigError("OID keys must be strings and values must be dictionaries.")
+                return oids
+            except (json.JSONDecodeError, ValueError) as ex:
+                raise ConfigError('Config parsing error: {}'.format(ex))
     except Exception as ex:
         raise ConfigError('Config parsing error: {}'.format(ex))
     return oids
