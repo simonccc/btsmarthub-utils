@@ -4,9 +4,10 @@
 
 * poll the internet usage for devices connected and send the metrics to graphite
 
-* other random stuff
+* [delete-device](delete-device)
 
-# setup
+
+# setup 
 
 copy `example-config.py` to `config.py` and edit it
 
