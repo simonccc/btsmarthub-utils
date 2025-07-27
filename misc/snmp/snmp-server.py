@@ -678,8 +678,14 @@ def get_next(oids, oid):
 def parse_config(filename):
     """Read and parse a config"""
     oids = {}
+    safe_root = '/etc/snmp'  # Define a safe root directory for configuration files
     try:
-        with open(filename, 'r', encoding='utf-8') as conf_file:
+        # Normalize the path and ensure it is within the safe root directory
+        normalized_path = os.path.normpath(filename)
+        if not normalized_path.startswith(safe_root):
+            raise ConfigError("Access to the specified file is not allowed.")
+
+        with open(normalized_path, 'r', encoding='utf-8') as conf_file:
             try:
                 oids = json.load(conf_file)
                 if not isinstance(oids, dict):
