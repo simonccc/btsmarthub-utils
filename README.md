@@ -1,11 +1,14 @@
 # btsmarthub-utils
 
-* scrape the logs displayed in the normal gui and tail -f them in the console or send to syslog
+* [logs-tail](logs-tail) - scrape the logs displayed in the normal gui and tail -f them in the console or send to syslog 
 
 * poll the internet usage for devices connected and send the metrics to graphite
 
 * [delete-device](delete-device)
 
+* [docker](docker) docker version
+
+* [misc](misc) much non working stuff 
 
 # setup 
 
