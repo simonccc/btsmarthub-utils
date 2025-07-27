@@ -227,7 +227,13 @@ while True:
     if ( str(ts) == str(event_timestamp)):
         ts = (int(ts) + 1 )
 
-  validated_url = DOCKER_URL.rstrip('/') + '/cgi/cgi_basicMyDevice.js'
+  # Select a server-controlled URL from the whitelist
+  ALLOWED_URL_MAP = {
+      "example": "http://example.com/cgi/cgi_basicMyDevice.js",
+      "another-example": "http://another-example.com/cgi/cgi_basicMyDevice.js"
+  }
+  selected_url_key = "example"  # Replace with logic to select based on user input
+  validated_url = ALLOWED_URL_MAP[selected_url_key]
   import requests.adapters
   class ValidatedHTTPAdapter(requests.adapters.HTTPAdapter):
       def __init__(self, ip, *args, **kwargs):
@@ -239,7 +245,7 @@ while True:
           # Force the connection to use the validated IP address
           url = f"{parsed_url.scheme}://{self.ip}{parsed_url.path}"
           return super().get_connection(url, proxies)
-  parsed_url = urllib.parse.urlparse(DOCKER_URL)
+  parsed_url = urllib.parse.urlparse(validated_url)
   validated_ip = socket.gethostbyname(parsed_url.hostname)
   session = requests.Session()
   session.mount("http://", ValidatedHTTPAdapter(validated_ip))
