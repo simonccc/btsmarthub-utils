@@ -1,16 +1,16 @@
 # btsmarthub-utils
 
-* [logs-tail](logs-tail) - scrape the logs displayed in the normal gui and tail -f them in the console or send to syslog 
+* [logs-tail](logs-tail) - scrape the logs displayed in the normal gui and tail -f them in the console or send to syslog
 
-* poll the internet usage for devices connected and send the metrics to graphite
+* [bandwidth-graphite](bandwidth-graphite) - poll the internet usage for devices connected and send the metrics to graphite
 
-* [delete-device](delete-device)
+* [delete-device](delete-device) - delete device from the smarthubs db via mac address
 
-* [docker](docker) docker version
+* [docker](docker) docker version - supports syslog output
 
-* [misc](misc) much non working stuff 
+* [misc](misc) much non working stuff
 
-# setup 
+# setup
 
 copy `example-config.py` to `config.py` and edit it
 
@@ -21,5 +21,3 @@ copy `example-config.py` to `config.py` and edit it
 'cookies' urn is a random string used in requests
 'graphite' graphite server and prefix for the smarthub data ( only tested on port 2003 ) 
 ```
-
-
