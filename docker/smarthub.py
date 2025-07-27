@@ -33,6 +33,10 @@ except:
 try:
   DOCKER_URL=os.environ['URL']
   DOCKER_PASS=os.environ['PASS']
+  ALLOWED_URLS = ["http://example.com", "http://another-example.com"]  # Whitelist of allowed URLs
+  if DOCKER_URL not in ALLOWED_URLS:
+      print(f"Invalid URL provided: {DOCKER_URL}", file=sys.stderr)
+      sys.exit(1)
 except:
   print('NO URL OR PASS DEFINED. EXITING',file=sys.stderr)
   sys.exit(1)
@@ -207,7 +211,8 @@ while True:
     if ( str(ts) == str(event_timestamp)):
         ts = (int(ts) + 1 )
 
-  vars = (requests.get(DOCKER_URL + '/cgi/cgi_basicMyDevice.js').content.decode()).split('var')
+  validated_url = DOCKER_URL.rstrip('/') + '/cgi/cgi_basicMyDevice.js'
+  vars = (requests.get(validated_url).content.decode()).split('var')
   rate = vars[2].split('\n')
 
   for rate in rate:
