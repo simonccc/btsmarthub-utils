@@ -34,8 +34,24 @@ try:
   DOCKER_URL=os.environ['URL']
   DOCKER_PASS=os.environ['PASS']
   ALLOWED_URLS = ["http://example.com", "http://another-example.com"]  # Whitelist of allowed URLs
-  if DOCKER_URL not in ALLOWED_URLS:
-      print(f"Invalid URL provided: {DOCKER_URL}", file=sys.stderr)
+  def validate_url(url):
+      import socket
+      from urllib.parse import urlparse
+      parsed_url = urlparse(url)
+      if parsed_url.scheme not in ["http", "https"]:
+          return False
+      if url not in ALLOWED_URLS:
+          return False
+      try:
+          ip = socket.gethostbyname(parsed_url.hostname)
+          # Ensure the IP is not private or internal
+          if ip.startswith("10.") or ip.startswith("192.168.") or ip.startswith("172.16.") or ip.startswith("127."):
+              return False
+      except socket.error:
+          return False
+      return True
+  if not validate_url(DOCKER_URL):
+      print(f"Invalid or unsafe URL provided: {DOCKER_URL}", file=sys.stderr)
       sys.exit(1)
 except:
   print('NO URL OR PASS DEFINED. EXITING',file=sys.stderr)
@@ -212,7 +228,23 @@ while True:
         ts = (int(ts) + 1 )
 
   validated_url = DOCKER_URL.rstrip('/') + '/cgi/cgi_basicMyDevice.js'
-  vars = (requests.get(validated_url).content.decode()).split('var')
+  import requests.adapters
+  class ValidatedHTTPAdapter(requests.adapters.HTTPAdapter):
+      def __init__(self, ip, *args, **kwargs):
+          super().__init__(*args, **kwargs)
+          self.ip = ip
+      def get_connection(self, url, proxies=None):
+          from urllib.parse import urlparse
+          parsed_url = urlparse(url)
+          # Force the connection to use the validated IP address
+          url = f"{parsed_url.scheme}://{self.ip}{parsed_url.path}"
+          return super().get_connection(url, proxies)
+  parsed_url = urllib.parse.urlparse(DOCKER_URL)
+  validated_ip = socket.gethostbyname(parsed_url.hostname)
+  session = requests.Session()
+  session.mount("http://", ValidatedHTTPAdapter(validated_ip))
+  session.mount("https://", ValidatedHTTPAdapter(validated_ip))
+  vars = (session.get(validated_url).content.decode()).split('var')
   rate = vars[2].split('\n')
 
   for rate in rate:
