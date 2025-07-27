@@ -149,6 +149,9 @@ while True:
   parsed_events = {}
 
   # request status page with latest time stamp
+  if not validate_url(DOCKER_URL):
+      print(f"Invalid or unsafe URL provided: {DOCKER_URL}", file=sys.stderr)
+      sys.exit(1)
   r = requests.get(DOCKER_URL + '/cgi/cgi_helpdesk.js?t=' + str(ts), cookies=cookies, allow_redirects=False)
 
   # if a 302 login
