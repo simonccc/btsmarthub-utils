@@ -31,28 +31,18 @@ except:
 
 # login details
 try:
-  DOCKER_URL=os.environ['URL']
+  DOCKER_URL_KEY=os.environ['URL_KEY']  # Use a key, not a URL
   DOCKER_PASS=os.environ['PASS']
-  ALLOWED_URLS = ["http://example.com", "http://another-example.com"]  # Whitelist of allowed URLs
-  def validate_url(url):
-      import socket
-      from urllib.parse import urlparse
-      parsed_url = urlparse(url)
-      if parsed_url.scheme not in ["http", "https"]:
-          return False
-      if url not in ALLOWED_URLS:
-          return False
-      try:
-          ip = socket.gethostbyname(parsed_url.hostname)
-          # Ensure the IP is not private or internal
-          if ip.startswith("10.") or ip.startswith("192.168.") or ip.startswith("172.16.") or ip.startswith("127."):
-              return False
-      except socket.error:
-          return False
-      return True
-  if not validate_url(DOCKER_URL):
-      print(f"Invalid or unsafe URL provided: {DOCKER_URL}", file=sys.stderr)
+  ALLOWED_URLS = {
+      "example": "http://example.com",
+      "another-example": "http://another-example.com"
+  }  # Whitelist of allowed URLs, mapped by key
+  def validate_url_key(key):
+      return key in ALLOWED_URLS
+  if not validate_url_key(DOCKER_URL_KEY):
+      print(f"Invalid or unsafe URL key provided: {DOCKER_URL_KEY}", file=sys.stderr)
       sys.exit(1)
+  DOCKER_URL = ALLOWED_URLS[DOCKER_URL_KEY]
 except:
   print('NO URL OR PASS DEFINED. EXITING',file=sys.stderr)
   sys.exit(1)
@@ -149,9 +139,7 @@ while True:
   parsed_events = {}
 
   # request status page with latest time stamp
-  if not validate_url(DOCKER_URL):
-      print(f"Invalid or unsafe URL provided: {DOCKER_URL}", file=sys.stderr)
-      sys.exit(1)
+  # DOCKER_URL is now always from the whitelist, so no need to revalidate
   r = requests.get(DOCKER_URL + '/cgi/cgi_helpdesk.js?t=' + str(ts), cookies=cookies, allow_redirects=False)
 
   # if a 302 login
